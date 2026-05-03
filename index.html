@@ -146,6 +146,16 @@ footer{padding:32px 40px;border-top:1px solid var(--border);display:flex;justify
 .fade-up{opacity:0;transform:translateY(24px);transition:opacity 0.6s ease,transform 0.6s ease}
 .fade-up.visible{opacity:1;transform:translateY(0)}
 
+/* DEMO MODAL */
+.demo-overlay{position:fixed;inset:0;background:rgba(0,0,0,0.85);z-index:200;display:none;align-items:center;justify-content:center;padding:20px}
+.demo-overlay.show{display:flex}
+.demo-modal{background:#0f1318;border:1px solid var(--border);border-radius:20px;width:100%;max-width:420px;max-height:90vh;overflow:hidden;position:relative;display:flex;flex-direction:column}
+.demo-header{padding:14px 18px;display:flex;justify-content:space-between;align-items:center;border-bottom:1px solid var(--border);flex-shrink:0}
+.demo-title{font-family:'Syne',sans-serif;font-size:15px;font-weight:700}
+.demo-close{background:var(--border);border:none;color:var(--text);width:28px;height:28px;border-radius:50%;cursor:pointer;font-size:14px;display:flex;align-items:center;justify-content:center}
+.demo-frame{width:100%;height:75vh;border:none}
+.portfolio-demo-btn{display:block;text-align:center;margin-top:14px;padding:10px;background:rgba(59,130,246,0.1);border:1px solid rgba(59,130,246,0.25);border-radius:10px;color:var(--accent2);font-size:13px;font-weight:600;cursor:pointer;transition:all 0.2s;text-decoration:none}
+.portfolio-demo-btn:hover{background:rgba(59,130,246,0.2)}
 @media(max-width:768px){
   nav{padding:14px 20px}
   .nav-links{display:none}
@@ -263,13 +273,17 @@ footer{padding:32px 40px;border-top:1px solid var(--border);display:flex;justify
         <div class="portfolio-preview">📈</div>
         <div class="portfolio-body">
           <div class="portfolio-title">Трейдинг-бот с сигналами</div>
-          <div class="portfolio-desc">Бот получает сигналы из TradingView, фильтрует их и отправляет подписчикам в Telegram-канал. Сохранение в CSV, автоматизация.</div>
+          <div class="portfolio-desc">Бот получает сигналы из TradingView, фильтрует их и отправляет подписчикам в Telegram-канал. Сохранение в CSV, автоматизация. Работает 24/7.</div>
           <div class="portfolio-meta">
             <div class="portfolio-tech">
               <span class="tag">Python</span>
               <span class="tag">TradingView</span>
             </div>
             <div class="portfolio-badge">Работает</div>
+          </div>
+          <div style="display:flex;gap:8px;margin-top:14px">
+            <button class="portfolio-demo-btn" style="flex:1" onclick="openDemo('tradingbot.html','Трейдинг-бот — Демо')">▶ Демо</button>
+            <a class="portfolio-demo-btn" style="flex:1;text-align:center" href="https://t.me/Crypto_AI_Signalss" target="_blank">✈️ Канал</a>
           </div>
         </div>
       </div>
@@ -285,13 +299,14 @@ footer{padding:32px 40px;border-top:1px solid var(--border);display:flex;justify
             </div>
             <div class="portfolio-badge">Демо</div>
           </div>
+          <button class="portfolio-demo-btn" onclick="openDemo('corpbot.html','Корпоративный бот — Демо')">▶ Смотреть демо</button>
         </div>
       </div>
       <div class="portfolio-card fade-up">
         <div class="portfolio-preview">📱</div>
         <div class="portfolio-body">
-          <div class="portfolio-title">Universal Mini App</div>
-          <div class="portfolio-desc">Универсальный шаблон Mini App с личным кабинетом, историей заказов, формой заявок и статистикой. Адаптируется под любой бизнес.</div>
+          <div class="portfolio-title">Mini App — Магазин товаров</div>
+          <div class="portfolio-desc">Полноценный интернет-магазин внутри Telegram: каталог, корзина, оформление заказа. Адаптируется под любой бизнес.</div>
           <div class="portfolio-meta">
             <div class="portfolio-tech">
               <span class="tag">HTML/JS</span>
@@ -299,6 +314,23 @@ footer{padding:32px 40px;border-top:1px solid var(--border);display:flex;justify
             </div>
             <div class="portfolio-badge">Демо</div>
           </div>
+          <button class="portfolio-demo-btn" onclick="openDemo('miniapp.html','Mini App Магазин — Демо')">▶ Смотреть демо</button>
+        </div>
+      </div>
+      <div class="portfolio-card fade-up">
+        <div class="portfolio-preview">🤖</div>
+        <div class="portfolio-body">
+          <div class="portfolio-title">ИИ-редакция для Telegram канала</div>
+          <div class="portfolio-desc">Агент собирает новости с разных источников, GPT обрабатывает и публикует в канал. Владелец может редактировать посты перед публикацией.</div>
+          <div class="portfolio-meta">
+            <div class="portfolio-tech">
+              <span class="tag">GPT-4</span>
+              <span class="tag">Python</span>
+              <span class="tag">RSS</span>
+            </div>
+            <div class="portfolio-badge">Демо</div>
+          </div>
+          <button class="portfolio-demo-btn" onclick="openDemo('aibot.html','ИИ-редакция — Демо')">▶ Смотреть демо</button>
         </div>
       </div>
     </div>
@@ -432,11 +464,37 @@ footer{padding:32px 40px;border-top:1px solid var(--border);display:flex;justify
   <div class="footer-copy">© 2025 Robert Pavlov — Telegram боты и Mini Apps · Латвия</div>
 </footer>
 
+<!-- DEMO MODAL -->
+<div class="demo-overlay" id="demoOverlay" onclick="closeDemo(event)">
+  <div class="demo-modal">
+    <div class="demo-header">
+      <span class="demo-title" id="demoTitle">Демо</span>
+      <button class="demo-close" onclick="closeDemoBtn()">✕</button>
+    </div>
+    <iframe class="demo-frame" id="demoFrame" src=""></iframe>
+  </div>
+</div>
+
 <script>
 const obs = new IntersectionObserver((entries) => {
   entries.forEach(e => { if(e.isIntersecting) e.target.classList.add('visible') });
 }, {threshold: 0.1});
 document.querySelectorAll('.fade-up').forEach(el => obs.observe(el));
+
+function openDemo(file, title){
+  document.getElementById('demoFrame').src = file;
+  document.getElementById('demoTitle').textContent = title;
+  document.getElementById('demoOverlay').classList.add('show');
+  document.body.style.overflow = 'hidden';
+}
+function closeDemo(e){
+  if(e.target === document.getElementById('demoOverlay')) closeDemoBtn();
+}
+function closeDemoBtn(){
+  document.getElementById('demoOverlay').classList.remove('show');
+  document.getElementById('demoFrame').src = '';
+  document.body.style.overflow = '';
+}
 </script>
 </body>
 </html>

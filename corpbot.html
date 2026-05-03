@@ -1,0 +1,283 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<title>Корпоративный бот — Демо</title>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@600;700;800&family=Manrope:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+:root{
+  --bg:#17212b;--bg2:#242f3d;--bg3:#1c2733;
+  --accent:#5288c1;--accent2:#64b5f6;
+  --text:#fff;--sub:#7d9cb8;--border:#2a3a4a;
+  --green:#4caf50;--red:#ef5350;--orange:#ff9800;--card:#1e2d3d;
+}
+html,body{height:100%;background:var(--bg);font-family:'Manrope',sans-serif;color:var(--text);overflow-x:hidden;max-width:420px;margin:0 auto}
+
+.tg-header{background:var(--bg2);padding:12px 16px;display:flex;align-items:center;gap:10px;border-bottom:1px solid var(--border);position:sticky;top:0;z-index:50}
+.bot-avatar{width:36px;height:36px;border-radius:50%;background:var(--accent);display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0}
+.bot-info{flex:1}
+.bot-name{font-family:'Syne',sans-serif;font-size:15px;font-weight:700}
+.bot-status{font-size:11px;color:var(--green);display:flex;align-items:center;gap:4px}
+.bot-status::before{content:'';width:6px;height:6px;border-radius:50%;background:var(--green);display:block}
+.menu-btn{color:var(--accent2);font-size:20px;cursor:pointer}
+
+.chat{padding:12px 12px 80px;display:flex;flex-direction:column;gap:8px;min-height:calc(100vh - 60px)}
+
+/* MESSAGES */
+.msg-bot{display:flex;gap:8px;align-items:flex-end;max-width:85%}
+.msg-bot-avatar{width:28px;height:28px;border-radius:50%;background:var(--accent);display:flex;align-items:center;justify-content:center;font-size:14px;flex-shrink:0;margin-bottom:2px}
+.bubble{background:var(--bg2);border-radius:16px 16px 16px 4px;padding:10px 14px;font-size:14px;line-height:1.5;border:1px solid var(--border)}
+.bubble-user{background:var(--accent);border-radius:16px 16px 4px 16px;border:none;margin-left:auto;max-width:85%}
+.msg-time{font-size:10px;color:var(--sub);margin-top:3px;padding:0 4px}
+.msg-right{align-self:flex-end;display:flex;flex-direction:column;align-items:flex-end}
+
+/* KEYBOARD */
+.keyboard{display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-top:6px}
+.keyboard.wide{grid-template-columns:1fr}
+.kb-btn{background:var(--bg3);border:1px solid var(--border);border-radius:10px;padding:9px 12px;font-size:13px;font-weight:500;color:var(--text);cursor:pointer;text-align:center;transition:all 0.2s;font-family:'Manrope',sans-serif}
+.kb-btn:hover{background:var(--accent);border-color:var(--accent)}
+.kb-btn:active{transform:scale(0.97)}
+
+/* CARDS IN CHAT */
+.info-card{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:14px;margin-top:4px;font-size:13px}
+.info-row{display:flex;justify-content:space-between;padding:5px 0;border-bottom:1px solid var(--border)}
+.info-row:last-child{border-bottom:none}
+.info-label{color:var(--sub)}
+.info-val{font-weight:600}
+.status-badge{padding:2px 10px;border-radius:20px;font-size:11px;font-weight:600}
+.s-green{background:rgba(76,175,80,0.15);color:#81c784}
+.s-orange{background:rgba(255,152,0,0.15);color:#ffb74d}
+.s-red{background:rgba(239,83,80,0.15);color:#ef9a9a}
+.s-blue{background:rgba(82,136,193,0.2);color:var(--accent2)}
+
+/* TYPING */
+.typing{display:flex;gap:4px;align-items:center;padding:10px 14px;background:var(--bg2);border-radius:16px;width:fit-content;border:1px solid var(--border)}
+.dot-typing{width:6px;height:6px;border-radius:50%;background:var(--sub);animation:blink 1.2s infinite}
+.dot-typing:nth-child(2){animation-delay:0.2s}
+.dot-typing:nth-child(3){animation-delay:0.4s}
+@keyframes blink{0%,80%,100%{opacity:0.2}40%{opacity:1}}
+
+/* BOTTOM INPUT */
+.bottom-bar{position:fixed;bottom:0;left:50%;transform:translateX(-50%);width:100%;max-width:420px;background:var(--bg2);border-top:1px solid var(--border);padding:8px 12px;display:flex;gap:8px;align-items:center}
+.msg-input{flex:1;background:var(--bg3);border:1px solid var(--border);border-radius:20px;padding:9px 14px;color:var(--text);font-size:14px;font-family:'Manrope',sans-serif;outline:none}
+.send-btn{background:var(--accent);border:none;border-radius:50%;width:36px;height:36px;display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:16px;flex-shrink:0}
+
+/* SECTION DIVIDER */
+.divider{text-align:center;font-size:11px;color:var(--sub);padding:4px 0}
+
+/* STATS ROW */
+.stats-row{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;margin-top:4px}
+.stat-card{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:10px;text-align:center}
+.stat-num{font-family:'Syne',sans-serif;font-size:20px;font-weight:800}
+.stat-lbl{font-size:10px;color:var(--sub);margin-top:2px}
+</style>
+</head>
+<body>
+
+<div class="tg-header">
+  <div class="bot-avatar">🏢</div>
+  <div class="bot-info">
+    <div class="bot-name">CorpBot Pro</div>
+    <div class="bot-status">онлайн</div>
+  </div>
+  <span class="menu-btn">⋮</span>
+</div>
+
+<div class="chat" id="chat">
+  <div class="divider">сегодня</div>
+</div>
+
+<div class="bottom-bar">
+  <input class="msg-input" id="msgInput" placeholder="Сообщение..." onkeydown="if(event.key==='Enter')sendUserMsg()">
+  <button class="send-btn" onclick="sendUserMsg()">➤</button>
+</div>
+
+<script>
+const chat = document.getElementById('chat');
+let step = 'start';
+
+const scenarios = {
+  start: {
+    bot: ['👋 Добро пожаловать в <b>CorpBot Pro</b>!\n\nЯ помогу вам управлять клиентами, заявками и получать уведомления. Выберите раздел:'],
+    keyboard: [['👥 Клиенты','📋 Заявки'],['📊 Статистика','🔔 Уведомления']]
+  },
+  clients: {
+    bot: ['🔍 <b>Поиск клиента</b>\n\nВведите имя, телефон или ID клиента:'],
+    keyboard: [['🔎 Найти по ID: 1042'],['⬅️ Главное меню']]
+  },
+  client_found: {
+    bot: ['✅ <b>Клиент найден</b>'],
+    card: {rows:[
+      {label:'Имя',val:'Александр Петров'},
+      {label:'Телефон',val:'+371 2X XXX XXX'},
+      {label:'Email',val:'a.petrov@mail.com'},
+      {label:'Статус',val:'Активный',badge:'s-green'},
+      {label:'Договор',val:'№ 2024-1042'},
+      {label:'Сумма',val:'4 200 €'},
+    ]},
+    keyboard:[['📋 Его заявки','✏️ Редактировать'],['⬅️ Назад']]
+  },
+  orders: {
+    bot: ['📋 <b>Активные заявки</b>\n\nВсего открытых: 3'],
+    orders: true,
+    keyboard:[['➕ Создать заявку','🔍 Поиск'],['⬅️ Главное меню']]
+  },
+  new_order: {
+    bot: ['➕ <b>Новая заявка</b>\n\nЗаполните форму:'],
+    form: true,
+    keyboard:[['✅ Создать заявку'],['⬅️ Отмена']]
+  },
+  order_created: {
+    bot: ['✅ <b>Заявка #4829 создана!</b>\n\nНазначен исполнитель. Клиент получил уведомление на email.'],
+    keyboard:[['📋 Все заявки','⬅️ Главное меню']]
+  },
+  stats: {
+    bot: ['📊 <b>Статистика за месяц</b>'],
+    stats: true,
+    keyboard:[['📅 За неделю','📅 За год'],['⬅️ Главное меню']]
+  },
+  notifications: {
+    bot: ['🔔 <b>Уведомления</b>\n\nВыберите тип:'],
+    keyboard:[['📨 Отправить клиенту','📢 Всем клиентам'],['⬅️ Главное меню']]
+  },
+  notify_sent: {
+    bot: ['📨 <b>Уведомление отправлено!</b>\n\nКлиент получит сообщение в Telegram и на email. Статус доставки появится через минуту.'],
+    keyboard:[['🔔 Ещё уведомление','⬅️ Главное меню']]
+  }
+};
+
+function addBotMsg(html, extra){
+  return new Promise(resolve => {
+    const wrap = document.createElement('div');
+    wrap.className = 'msg-bot';
+    wrap.innerHTML = `<div class="msg-bot-avatar">🤖</div><div><div class="typing"><div class="dot-typing"></div><div class="dot-typing"></div><div class="dot-typing"></div></div></div>`;
+    chat.appendChild(wrap);
+    scrollBot();
+    setTimeout(() => {
+      const inner = wrap.querySelector('div:last-child');
+      inner.innerHTML = `<div class="bubble">${html}</div><div class="msg-time">${getTime()}</div>`;
+      if(extra === 'card') {}
+      scrollBot();
+      resolve();
+    }, 900);
+  });
+}
+
+function addCard(rows){
+  const card = document.createElement('div');
+  card.className = 'msg-bot';
+  card.style.marginTop='-4px';
+  const rowsHtml = rows.map(r => `<div class="info-row"><span class="info-label">${r.label}</span><span class="info-val">${r.badge ? `<span class="status-badge ${r.badge}">${r.val}</span>` : r.val}</span></div>`).join('');
+  card.innerHTML = `<div style="width:28px;flex-shrink:0"></div><div class="info-card" style="flex:1">${rowsHtml}</div>`;
+  chat.appendChild(card);
+  scrollBot();
+}
+
+function addOrders(){
+  const orders = [
+    {id:'#4826',client:'Мария К.',desc:'Техподдержка',status:'В работе',badge:'s-orange'},
+    {id:'#4824',client:'Игорь С.',desc:'Консультация',status:'Ожидает',badge:'s-blue'},
+    {id:'#4821',client:'Анна П.',desc:'Доп. услуги',status:'Срочно',badge:'s-red'},
+  ];
+  const wrap = document.createElement('div');
+  wrap.className='msg-bot';
+  wrap.style.marginTop='-4px';
+  wrap.innerHTML=`<div style="width:28px;flex-shrink:0"></div><div style="flex:1;display:flex;flex-direction:column;gap:6px">${orders.map(o=>`<div class="info-card" style="padding:10px 12px"><div style="display:flex;justify-content:space-between;align-items:center"><span style="font-weight:600;font-size:13px">${o.id} — ${o.client}</span><span class="status-badge ${o.badge}">${o.status}</span></div><div style="font-size:12px;color:var(--sub);margin-top:3px">${o.desc}</div></div>`).join('')}</div>`;
+  chat.appendChild(wrap);
+  scrollBot();
+}
+
+function addStats(){
+  const wrap = document.createElement('div');
+  wrap.className='msg-bot';
+  wrap.style.marginTop='-4px';
+  wrap.innerHTML=`<div style="width:28px;flex-shrink:0"></div><div style="flex:1"><div class="stats-row"><div class="stat-card"><div class="stat-num" style="color:#64b5f6">138</div><div class="stat-lbl">Клиентов</div></div><div class="stat-card"><div class="stat-num" style="color:#81c784">24</div><div class="stat-lbl">Заявок</div></div><div class="stat-card"><div class="stat-num" style="color:#ffb74d">18.4k</div><div class="stat-lbl">Выручка €</div></div></div><div class="info-card" style="margin-top:8px"><div class="info-row"><span class="info-label">Новых клиентов</span><span class="info-val" style="color:#81c784">+12</span></div><div class="info-row"><span class="info-label">Закрытых заявок</span><span class="info-val">19 из 24</span></div><div class="info-row"><span class="info-label">Средний чек</span><span class="info-val">766 €</span></div><div class="info-row"><span class="info-label">NPS</span><span class="info-val" style="color:#81c784">4.8 / 5.0</span></div></div></div>`;
+  chat.appendChild(wrap);
+  scrollBot();
+}
+
+function addForm(){
+  const wrap = document.createElement('div');
+  wrap.className='msg-bot';
+  wrap.style.marginTop='-4px';
+  wrap.innerHTML=`<div style="width:28px;flex-shrink:0"></div><div class="info-card" style="flex:1"><div class="info-row"><span class="info-label">Клиент</span><span class="info-val">Александр Петров</span></div><div class="info-row"><span class="info-label">Тип</span><span class="info-val">Техподдержка</span></div><div class="info-row"><span class="info-label">Приоритет</span><span class="info-val"><span class="status-badge s-orange">Средний</span></span></div><div class="info-row"><span class="info-label">Дата</span><span class="info-val">Сегодня</span></div></div>`;
+  chat.appendChild(wrap);
+  scrollBot();
+}
+
+function addKeyboard(rows){
+  const wrap = document.createElement('div');
+  wrap.className='keyboard-wrap';
+  wrap.style.marginTop='4px';
+  rows.forEach(row => {
+    const rowDiv = document.createElement('div');
+    rowDiv.className = row.length === 1 ? 'keyboard wide' : 'keyboard';
+    row.forEach(label => {
+      const btn = document.createElement('button');
+      btn.className='kb-btn';
+      btn.innerHTML=label;
+      btn.onclick=()=>handleBtn(label);
+      rowDiv.appendChild(btn);
+    });
+    wrap.appendChild(rowDiv);
+  });
+  chat.appendChild(wrap);
+  scrollBot();
+}
+
+function addUserMsg(text){
+  const wrap = document.createElement('div');
+  wrap.className='msg-right';
+  wrap.innerHTML=`<div class="bubble bubble-user">${text}</div><div class="msg-time">${getTime()}</div>`;
+  chat.appendChild(wrap);
+  scrollBot();
+}
+
+async function handleBtn(label){
+  document.querySelectorAll('.kb-btn').forEach(b=>b.disabled=true);
+  addUserMsg(label);
+  await new Promise(r=>setTimeout(r,300));
+  let sc;
+  if(label.includes('Клиент')) sc=scenarios.clients;
+  else if(label.includes('Найти по ID')) sc=scenarios.client_found;
+  else if(label.includes('Заявк') || label.includes('заявк')) sc=scenarios.orders;
+  else if(label.includes('Создать заявку')) sc = step==='orders_shown' ? scenarios.new_order : scenarios.order_created;
+  else if(label.includes('Статист')) sc=scenarios.stats;
+  else if(label.includes('Уведомл')) sc=scenarios.notifications;
+  else if(label.includes('Отправить') || label.includes('клиенту') || label.includes('Всем')) sc=scenarios.notify_sent;
+  else sc=scenarios.start;
+
+  for(const msg of sc.bot){
+    await addBotMsg(msg);
+  }
+  if(sc.card) addCard(sc.card.rows);
+  if(sc.orders){ addOrders(); step='orders_shown'; }
+  if(sc.stats) addStats();
+  if(sc.form) addForm();
+  if(sc.keyboard) addKeyboard(sc.keyboard);
+}
+
+function sendUserMsg(){
+  const input = document.getElementById('msgInput');
+  if(!input.value.trim()) return;
+  addUserMsg(input.value);
+  input.value='';
+  setTimeout(async()=>{
+    await addBotMsg('Пожалуйста, используйте кнопки меню для навигации 👇');
+  }, 800);
+}
+
+function scrollBot(){ chat.scrollTop = chat.scrollHeight; }
+function getTime(){ const d=new Date(); return d.getHours()+':'+String(d.getMinutes()).padStart(2,'0'); }
+
+// Start
+(async()=>{
+  const sc = scenarios.start;
+  for(const msg of sc.bot) await addBotMsg(msg);
+  addKeyboard(sc.keyboard);
+})();
+</script>
+</body>
+</html>

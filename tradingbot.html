@@ -1,0 +1,302 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<title>Трейдинг-бот — Демо</title>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@600;700;800&family=Manrope:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+:root{
+  --bg:#17212b;--bg2:#242f3d;--bg3:#1c2733;
+  --accent:#5288c1;--accent2:#64b5f6;
+  --text:#fff;--sub:#7d9cb8;--border:#2a3a4a;
+  --green:#4caf50;--red:#ef5350;--card:#1e2d3d;
+}
+html,body{background:var(--bg);font-family:'Manrope',sans-serif;color:var(--text);max-width:420px;margin:0 auto;min-height:100vh;overflow-x:hidden}
+
+.header{background:var(--bg2);padding:12px 16px;display:flex;align-items:center;gap:10px;border-bottom:1px solid var(--border);position:sticky;top:0;z-index:50}
+.bot-avatar{width:36px;height:36px;border-radius:50%;background:linear-gradient(135deg,#4caf50,#1b5e20);display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0}
+.bot-name{font-family:'Syne',sans-serif;font-size:15px;font-weight:700}
+.bot-status{font-size:11px;color:var(--green);display:flex;align-items:center;gap:4px}
+.bot-status::before{content:'';width:6px;height:6px;border-radius:50%;background:var(--green);display:block;animation:pulse 2s infinite}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:0.3}}
+
+.tabs{display:flex;background:var(--bg2);border-bottom:1px solid var(--border);position:sticky;top:60px;z-index:40}
+.tab{flex:1;padding:10px;text-align:center;font-size:12px;font-weight:500;color:var(--sub);cursor:pointer;border-bottom:2px solid transparent;transition:all 0.2s}
+.tab.active{color:var(--accent2);border-bottom-color:var(--accent2)}
+
+.panel{display:none;padding:12px 12px 80px}
+.panel.active{display:block}
+
+/* STATS ROW */
+.stats-row{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;margin-bottom:12px}
+.stat-box{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:12px;text-align:center}
+.stat-big{font-family:'Syne',sans-serif;font-size:22px;font-weight:800}
+.stat-lbl{font-size:10px;color:var(--sub);margin-top:3px}
+
+/* SIGNAL CARD */
+.signal{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:14px;margin-bottom:10px;position:relative;overflow:hidden}
+.signal::before{content:'';position:absolute;left:0;top:0;bottom:0;width:3px}
+.signal.long::before{background:var(--green)}
+.signal.short::before{background:var(--red)}
+.signal-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:10px}
+.signal-pair{font-family:'Syne',sans-serif;font-size:16px;font-weight:800}
+.signal-type{padding:3px 12px;border-radius:20px;font-size:12px;font-weight:700}
+.type-long{background:rgba(76,175,80,0.15);color:#81c784}
+.type-short{background:rgba(239,83,80,0.15);color:#ef9a9a}
+.signal-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;margin-bottom:10px}
+.sig-item{background:var(--bg3);border-radius:8px;padding:8px;text-align:center}
+.sig-label{font-size:10px;color:var(--sub);margin-bottom:3px}
+.sig-val{font-size:13px;font-weight:600}
+.sig-val.green{color:#81c784}
+.sig-val.red{color:#ef9a9a}
+.signal-footer{display:flex;justify-content:space-between;align-items:center;font-size:12px;color:var(--sub)}
+.signal-badge{display:flex;align-items:center;gap:4px;background:rgba(82,136,193,0.1);border:1px solid rgba(82,136,193,0.2);border-radius:20px;padding:3px 10px;font-size:11px;color:var(--accent2)}
+.result-badge{padding:3px 10px;border-radius:20px;font-size:11px;font-weight:600}
+.win{background:rgba(76,175,80,0.15);color:#81c784}
+.loss{background:rgba(239,83,80,0.15);color:#ef9a9a}
+.pending{background:rgba(82,136,193,0.15);color:var(--accent2)}
+
+/* LIVE SIGNAL */
+.live-wrap{background:rgba(76,175,80,0.05);border:1px solid rgba(76,175,80,0.2);border-radius:14px;padding:14px;margin-bottom:12px}
+.live-tag{display:flex;align-items:center;gap:6px;font-size:12px;color:var(--green);font-weight:600;margin-bottom:10px}
+.live-dot{width:8px;height:8px;border-radius:50%;background:var(--green);animation:pulse 1s infinite}
+
+/* CHART */
+.chart-wrap{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:14px;margin-bottom:12px}
+.chart-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:12px}
+.chart-title{font-family:'Syne',sans-serif;font-size:14px;font-weight:700}
+.chart-price{font-family:'Syne',sans-serif;font-size:20px;font-weight:800;color:#81c784}
+.mini-chart{height:80px;display:flex;align-items:flex-end;gap:2px}
+.bar-c{flex:1;border-radius:2px 2px 0 0;min-height:4px;transition:height 0.3s}
+.bar-up{background:rgba(76,175,80,0.6)}
+.bar-down{background:rgba(239,83,80,0.6)}
+
+/* HISTORY TABLE */
+.history-row{display:flex;align-items:center;gap:10px;padding:10px 0;border-bottom:1px solid var(--border)}
+.history-row:last-child{border-bottom:none}
+.h-pair{font-weight:600;font-size:14px;min-width:70px}
+.h-type{min-width:50px}
+.h-profit{margin-left:auto;font-weight:700;font-size:14px}
+.h-profit.pos{color:#81c784}
+.h-profit.neg{color:#ef9a9a}
+
+/* CHANNEL BTN */
+.channel-btn{display:flex;align-items:center;justify-content:center;gap:10px;background:var(--accent);color:white;border-radius:14px;padding:14px;font-size:15px;font-weight:700;text-decoration:none;margin-bottom:10px;font-family:'Syne',sans-serif}
+.channel-btn:hover{opacity:0.9}
+
+.section-title{font-family:'Syne',sans-serif;font-size:13px;font-weight:700;color:var(--sub);text-transform:uppercase;letter-spacing:1px;margin:16px 0 10px}
+</style>
+</head>
+<body>
+
+<div class="header">
+  <div class="bot-avatar">📈</div>
+  <div>
+    <div class="bot-name">Crypto AI Signals</div>
+    <div class="bot-status">бот активен · мониторинг рынка</div>
+  </div>
+</div>
+
+<div class="tabs">
+  <div class="tab active" onclick="switchTab('live',this)">🔴 Живые</div>
+  <div class="tab" onclick="switchTab('history',this)">📋 История</div>
+  <div class="tab" onclick="switchTab('stats',this)">📊 Статистика</div>
+  <div class="tab" onclick="switchTab('channel',this)">📢 Канал</div>
+</div>
+
+<!-- LIVE -->
+<div class="panel active" id="live">
+  <div class="live-wrap">
+    <div class="live-tag"><div class="live-dot"></div> Активный сигнал</div>
+    <div class="signal long" style="margin-bottom:0;border:none;padding:0;background:none">
+      <div class="signal-header">
+        <span class="signal-pair">BTC/USDT</span>
+        <span class="signal-type type-long">LONG</span>
+      </div>
+      <div class="signal-grid">
+        <div class="sig-item"><div class="sig-label">Вход</div><div class="sig-val">67 420</div></div>
+        <div class="sig-item"><div class="sig-label">Тейк</div><div class="sig-val green">69 500</div></div>
+        <div class="sig-item"><div class="sig-label">Стоп</div><div class="sig-val red">66 100</div></div>
+      </div>
+      <div class="signal-footer">
+        <span class="signal-badge">⚡ TradingView</span>
+        <span id="liveTime">00:00</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="chart-wrap">
+    <div class="chart-header">
+      <span class="chart-title">BTC/USDT</span>
+      <span class="chart-price" id="btcPrice">67 842</span>
+    </div>
+    <div class="mini-chart" id="miniChart"></div>
+  </div>
+
+  <div class="section-title">Последние сигналы</div>
+
+  <div class="signal long">
+    <div class="signal-header">
+      <span class="signal-pair">ETH/USDT</span>
+      <span class="signal-type type-long">LONG</span>
+    </div>
+    <div class="signal-grid">
+      <div class="sig-item"><div class="sig-label">Вход</div><div class="sig-val">3 512</div></div>
+      <div class="sig-item"><div class="sig-label">Тейк</div><div class="sig-val green">3 680</div></div>
+      <div class="sig-item"><div class="sig-label">Стоп</div><div class="sig-val red">3 420</div></div>
+    </div>
+    <div class="signal-footer">
+      <span class="signal-badge">⚡ TradingView</span>
+      <span class="result-badge win">+4.8%</span>
+    </div>
+  </div>
+
+  <div class="signal short">
+    <div class="signal-header">
+      <span class="signal-pair">SOL/USDT</span>
+      <span class="signal-type type-short">SHORT</span>
+    </div>
+    <div class="signal-grid">
+      <div class="sig-item"><div class="sig-label">Вход</div><div class="sig-val">178.4</div></div>
+      <div class="sig-item"><div class="sig-label">Тейк</div><div class="sig-val green">168.0</div></div>
+      <div class="sig-item"><div class="sig-label">Стоп</div><div class="sig-val red">183.0</div></div>
+    </div>
+    <div class="signal-footer">
+      <span class="signal-badge">⚡ TradingView</span>
+      <span class="result-badge win">+5.8%</span>
+    </div>
+  </div>
+</div>
+
+<!-- HISTORY -->
+<div class="panel" id="history">
+  <div class="stats-row" style="margin-top:4px">
+    <div class="stat-box"><div class="stat-big" style="color:#81c784">78%</div><div class="stat-lbl">Винрейт</div></div>
+    <div class="stat-box"><div class="stat-big" style="color:#64b5f6">47</div><div class="stat-lbl">Сигналов</div></div>
+    <div class="stat-box"><div class="stat-big" style="color:#81c784">+124%</div><div class="stat-lbl">За месяц</div></div>
+  </div>
+  <div class="chart-wrap">
+    <div style="font-family:'Syne',sans-serif;font-size:13px;font-weight:700;margin-bottom:12px">История сделок</div>
+    <div class="history-row"><span class="h-pair">BTC/USDT</span><span class="h-type"><span class="result-badge win">LONG</span></span><span style="font-size:12px;color:var(--sub)">2 дня назад</span><span class="h-profit pos">+3.1%</span></div>
+    <div class="history-row"><span class="h-pair">ETH/USDT</span><span class="h-type"><span class="result-badge win">LONG</span></span><span style="font-size:12px;color:var(--sub)">2 дня назад</span><span class="h-profit pos">+4.8%</span></div>
+    <div class="history-row"><span class="h-pair">SOL/USDT</span><span class="h-type"><span class="result-badge win">SHORT</span></span><span style="font-size:12px;color:var(--sub)">3 дня назад</span><span class="h-profit pos">+5.8%</span></div>
+    <div class="history-row"><span class="h-pair">BNB/USDT</span><span class="h-type"><span class="result-badge loss">SHORT</span></span><span style="font-size:12px;color:var(--sub)">3 дня назад</span><span class="h-profit neg">-1.2%</span></div>
+    <div class="history-row"><span class="h-pair">XRP/USDT</span><span class="h-type"><span class="result-badge win">LONG</span></span><span style="font-size:12px;color:var(--sub)">4 дня назад</span><span class="h-profit pos">+6.2%</span></div>
+    <div class="history-row"><span class="h-pair">AVAX/USDT</span><span class="h-type"><span class="result-badge win">LONG</span></span><span style="font-size:12px;color:var(--sub)">5 дней назад</span><span class="h-profit pos">+4.1%</span></div>
+    <div class="history-row"><span class="h-pair">BTC/USDT</span><span class="h-type"><span class="result-badge loss">SHORT</span></span><span style="font-size:12px;color:var(--sub)">5 дней назад</span><span class="h-profit neg">-0.8%</span></div>
+    <div class="history-row"><span class="h-pair">DOGE/USDT</span><span class="h-type"><span class="result-badge win">LONG</span></span><span style="font-size:12px;color:var(--sub)">6 дней назад</span><span class="h-profit pos">+8.4%</span></div>
+  </div>
+</div>
+
+<!-- STATS -->
+<div class="panel" id="stats">
+  <div class="stats-row" style="margin-top:4px">
+    <div class="stat-box"><div class="stat-big" style="color:#81c784">78%</div><div class="stat-lbl">Винрейт</div></div>
+    <div class="stat-box"><div class="stat-big" style="color:#64b5f6">47</div><div class="stat-lbl">Сигналов</div></div>
+    <div class="stat-box"><div class="stat-big" style="color:#ffb74d">3.8x</div><div class="stat-lbl">RR ratio</div></div>
+  </div>
+  <div class="chart-wrap">
+    <div style="font-family:'Syne',sans-serif;font-size:13px;font-weight:700;margin-bottom:4px">Прибыль по месяцам</div>
+    <div style="font-size:12px;color:var(--sub);margin-bottom:12px">Суммарный результат: <span style="color:#81c784;font-weight:600">+312%</span></div>
+    <div class="mini-chart" style="height:100px">
+      <div class="bar-c bar-up" style="height:40%"></div>
+      <div class="bar-c bar-up" style="height:55%"></div>
+      <div class="bar-c bar-down" style="height:20%"></div>
+      <div class="bar-c bar-up" style="height:70%"></div>
+      <div class="bar-c bar-up" style="height:85%"></div>
+      <div class="bar-c bar-down" style="height:15%"></div>
+      <div class="bar-c bar-up" style="height:65%"></div>
+      <div class="bar-c bar-up" style="height:90%"></div>
+      <div class="bar-c bar-up" style="height:75%"></div>
+      <div class="bar-c bar-up" style="height:100%"></div>
+    </div>
+    <div style="display:flex;justify-content:space-between;margin-top:6px">
+      <span style="font-size:10px;color:var(--sub)">Мар</span>
+      <span style="font-size:10px;color:var(--sub)">Апр</span>
+      <span style="font-size:10px;color:var(--sub)">Май</span>
+      <span style="font-size:10px;color:var(--sub)">Июн</span>
+      <span style="font-size:10px;color:var(--sub)">Июл</span>
+      <span style="font-size:10px;color:var(--sub)">Авг</span>
+      <span style="font-size:10px;color:var(--sub)">Сен</span>
+      <span style="font-size:10px;color:var(--sub)">Окт</span>
+      <span style="font-size:10px;color:var(--sub)">Ноя</span>
+      <span style="font-size:10px;color:var(--sub)">Дек</span>
+    </div>
+  </div>
+  <div class="chart-wrap">
+    <div style="font-family:'Syne',sans-serif;font-size:13px;font-weight:700;margin-bottom:12px">По монетам</div>
+    <div class="history-row"><span class="h-pair">BTC/USDT</span><span style="font-size:12px;color:var(--sub)">18 сигналов</span><span class="h-profit pos">+82%</span></div>
+    <div class="history-row"><span class="h-pair">ETH/USDT</span><span style="font-size:12px;color:var(--sub)">12 сигналов</span><span class="h-profit pos">+64%</span></div>
+    <div class="history-row"><span class="h-pair">SOL/USDT</span><span style="font-size:12px;color:var(--sub)">8 сигналов</span><span class="h-profit pos">+91%</span></div>
+    <div class="history-row"><span class="h-pair">Другие</span><span style="font-size:12px;color:var(--sub)">9 сигналов</span><span class="h-profit pos">+75%</span></div>
+  </div>
+</div>
+
+<!-- CHANNEL -->
+<div class="panel" id="channel">
+  <div style="text-align:center;padding:20px 0 16px">
+    <div style="font-size:48px;margin-bottom:8px">📢</div>
+    <div style="font-family:'Syne',sans-serif;font-size:18px;font-weight:800;margin-bottom:8px">Crypto AI Signals</div>
+    <div style="font-size:13px;color:var(--sub);margin-bottom:20px">Реальный канал с сигналами от TradingView.<br>Бот работает 24/7 — компьютер выключен.</div>
+  </div>
+  <a class="channel-btn" href="https://t.me/Crypto_AI_Signalss" target="_blank">✈️ Открыть канал в Telegram</a>
+  <div class="chart-wrap" style="margin-top:4px">
+    <div style="font-family:'Syne',sans-serif;font-size:13px;font-weight:700;margin-bottom:12px">О боте</div>
+    <div class="history-row"><span style="color:var(--sub);font-size:13px">Источник сигналов</span><span style="font-size:13px;font-weight:600">TradingView</span></div>
+    <div class="history-row"><span style="color:var(--sub);font-size:13px">Язык</span><span style="font-size:13px;font-weight:600">Python</span></div>
+    <div class="history-row"><span style="color:var(--sub);font-size:13px">Хостинг</span><span style="font-size:13px;font-weight:600">GitHub Actions</span></div>
+    <div class="history-row"><span style="color:var(--sub);font-size:13px">Режим работы</span><span style="font-size:13px;font-weight:600;color:#81c784">24/7 онлайн</span></div>
+    <div class="history-row"><span style="color:var(--sub);font-size:13px">Фильтрация</span><span style="font-size:13px;font-weight:600">ИИ + правила</span></div>
+  </div>
+</div>
+
+<script>
+function switchTab(id, el){
+  document.querySelectorAll('.panel').forEach(p=>p.classList.remove('active'));
+  document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+  el.classList.add('active');
+}
+
+// Live price simulation
+const prices = [67200,67350,67180,67420,67650,67580,67720,67842];
+let priceIdx = 0;
+function updatePrice(){
+  const change = (Math.random()-0.45)*150;
+  const newPrice = Math.round(prices[prices.length-1]+change);
+  prices.push(newPrice);
+  if(prices.length>20) prices.shift();
+  document.getElementById('btcPrice').textContent = newPrice.toLocaleString();
+  renderChart();
+}
+function renderChart(){
+  const chart = document.getElementById('miniChart');
+  const min = Math.min(...prices);
+  const max = Math.max(...prices);
+  const range = max-min || 1;
+  chart.innerHTML = prices.map((p,i)=>{
+    const h = Math.max(8,((p-min)/range)*100);
+    const isUp = i===0 || p >= prices[i-1];
+    return `<div class="bar-c ${isUp?'bar-up':'bar-down'}" style="height:${h}%"></div>`;
+  }).join('');
+}
+
+// Live timer
+function updateTimer(){
+  const now = new Date();
+  const h = String(now.getHours()).padStart(2,'0');
+  const m = String(now.getMinutes()).padStart(2,'0');
+  const s = String(now.getSeconds()).padStart(2,'0');
+  const el = document.getElementById('liveTime');
+  if(el) el.textContent = h+':'+m+':'+s;
+}
+
+renderChart();
+setInterval(updatePrice, 2000);
+setInterval(updateTimer, 1000);
+updateTimer();
+</script>
+</body>
+</html>

@@ -1,0 +1,427 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<title>AI Редакция — Демо</title>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@600;700;800&family=Manrope:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+:root{
+  --bg:#17212b;--bg2:#242f3d;--bg3:#1c2733;
+  --accent:#5288c1;--accent2:#64b5f6;
+  --text:#fff;--sub:#7d9cb8;--border:#2a3a4a;
+  --green:#4caf50;--red:#ef5350;--orange:#ff9800;--card:#1e2d3d;
+  --purple:#9c27b0;--purple2:#ce93d8;
+}
+html,body{background:var(--bg);font-family:'Manrope',sans-serif;color:var(--text);overflow-x:hidden;max-width:420px;margin:0 auto;min-height:100vh}
+
+/* HEADER */
+.header{background:var(--bg2);padding:12px 16px;display:flex;align-items:center;gap:10px;border-bottom:1px solid var(--border);position:sticky;top:0;z-index:50}
+.bot-avatar{width:36px;height:36px;border-radius:50%;background:linear-gradient(135deg,#5288c1,#9c27b0);display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0}
+.bot-name{font-family:'Syne',sans-serif;font-size:15px;font-weight:700}
+.bot-status{font-size:11px;color:var(--green);display:flex;align-items:center;gap:4px}
+.bot-status::before{content:'';width:6px;height:6px;border-radius:50%;background:var(--green);display:block}
+.header-actions{margin-left:auto;display:flex;gap:8px}
+.icon-btn{background:none;border:none;color:var(--sub);font-size:18px;cursor:pointer;padding:4px}
+
+/* TABS */
+.tabs{display:flex;background:var(--bg2);border-bottom:1px solid var(--border);position:sticky;top:60px;z-index:40}
+.tab{flex:1;padding:10px;text-align:center;font-size:13px;font-weight:500;color:var(--sub);cursor:pointer;border-bottom:2px solid transparent;transition:all 0.2s}
+.tab.active{color:var(--accent2);border-bottom-color:var(--accent2)}
+
+/* PANELS */
+.panel{display:none;padding:12px}
+.panel.active{display:block}
+
+/* QUEUE ITEMS */
+.queue-item{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:14px;margin-bottom:10px;position:relative}
+.queue-source{display:flex;align-items:center;gap:6px;margin-bottom:8px}
+.source-icon{font-size:14px}
+.source-name{font-size:11px;color:var(--sub);font-weight:500}
+.source-time{font-size:11px;color:var(--sub);margin-left:auto}
+.queue-title{font-size:14px;font-weight:600;margin-bottom:6px;line-height:1.4}
+.queue-preview{font-size:13px;color:var(--sub);line-height:1.5;margin-bottom:12px}
+.queue-actions{display:flex;gap:8px}
+.q-btn{flex:1;padding:8px;border-radius:10px;font-size:12px;font-weight:600;cursor:pointer;border:none;font-family:'Manrope',sans-serif;transition:all 0.2s}
+.q-btn:active{transform:scale(0.97)}
+.btn-publish{background:var(--accent);color:white}
+.btn-edit{background:var(--bg3);color:var(--text);border:1px solid var(--border)}
+.btn-skip{background:rgba(239,83,80,0.1);color:#ef9a9a;border:1px solid rgba(239,83,80,0.2)}
+.ai-badge{display:inline-flex;align-items:center;gap:4px;background:rgba(156,39,176,0.15);border:1px solid rgba(156,39,176,0.25);border-radius:20px;padding:3px 10px;font-size:11px;color:var(--purple2);margin-bottom:8px}
+
+/* EDIT MODAL */
+.modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,0.7);z-index:100;display:none;align-items:flex-end}
+.modal-overlay.show{display:flex}
+.modal{background:var(--bg2);border-radius:20px 20px 0 0;width:100%;padding:20px 16px;max-height:85vh;overflow-y:auto}
+.modal-handle{width:36px;height:4px;background:var(--border);border-radius:2px;margin:0 auto 16px}
+.modal-title{font-family:'Syne',sans-serif;font-size:16px;font-weight:700;margin-bottom:14px}
+.edit-label{font-size:12px;color:var(--sub);margin-bottom:5px;margin-top:12px}
+.edit-input{width:100%;background:var(--bg3);border:1px solid var(--border);border-radius:10px;padding:10px 12px;color:var(--text);font-size:14px;font-family:'Manrope',sans-serif;outline:none;resize:vertical}
+.edit-input:focus{border-color:var(--accent)}
+.modal-actions{display:flex;gap:8px;margin-top:16px}
+.modal-btn{flex:1;padding:12px;border-radius:12px;font-size:14px;font-weight:600;cursor:pointer;border:none;font-family:'Manrope',sans-serif}
+.modal-publish{background:var(--accent);color:white}
+.modal-cancel{background:var(--bg3);color:var(--text);border:1px solid var(--border)}
+
+/* PUBLISHED */
+.pub-item{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:14px;margin-bottom:10px}
+.pub-header{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:8px}
+.pub-title{font-size:14px;font-weight:600;flex:1;margin-right:8px;line-height:1.4}
+.pub-time{font-size:11px;color:var(--sub);white-space:nowrap}
+.pub-text{font-size:13px;color:var(--sub);line-height:1.5;margin-bottom:10px}
+.pub-stats{display:flex;gap:12px}
+.pub-stat{font-size:12px;color:var(--sub);display:flex;align-items:center;gap:4px}
+.pub-stat span{color:var(--text);font-weight:600}
+
+/* SETTINGS */
+.setting-group{background:var(--card);border:1px solid var(--border);border-radius:14px;margin-bottom:12px;overflow:hidden}
+.setting-title{font-size:12px;color:var(--sub);text-transform:uppercase;letter-spacing:1px;padding:10px 14px;border-bottom:1px solid var(--border);font-weight:600}
+.setting-row{display:flex;justify-content:space-between;align-items:center;padding:12px 14px;border-bottom:1px solid var(--border)}
+.setting-row:last-child{border-bottom:none}
+.setting-label{font-size:14px}
+.setting-sub{font-size:12px;color:var(--sub);margin-top:2px}
+.toggle{width:40px;height:22px;background:var(--accent);border-radius:11px;position:relative;cursor:pointer;flex-shrink:0}
+.toggle::after{content:'';position:absolute;width:18px;height:18px;background:white;border-radius:50%;top:2px;right:2px;transition:right 0.2s}
+.toggle.off{background:var(--border)}
+.toggle.off::after{right:20px}
+.source-chip{display:inline-flex;align-items:center;gap:6px;background:var(--bg3);border:1px solid var(--border);border-radius:20px;padding:4px 12px;font-size:12px;margin:4px;cursor:pointer}
+.source-chip.active{border-color:var(--accent);color:var(--accent2)}
+.sources-wrap{padding:10px 14px;display:flex;flex-wrap:wrap}
+.freq-select{background:var(--bg3);border:1px solid var(--border);border-radius:8px;padding:6px 10px;color:var(--text);font-size:13px;font-family:'Manrope',sans-serif;outline:none}
+
+/* STATS PANEL */
+.stats-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:12px}
+.stat-box{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:14px;text-align:center}
+.stat-big{font-family:'Syne',sans-serif;font-size:28px;font-weight:800}
+.stat-lbl{font-size:12px;color:var(--sub);margin-top:4px}
+.activity-bar{display:flex;align-items:flex-end;gap:4px;height:60px;margin-top:8px}
+.bar{flex:1;background:var(--accent);border-radius:4px 4px 0 0;opacity:0.7}
+.bar.today{opacity:1}
+
+/* TOAST */
+.toast{position:fixed;bottom:20px;left:50%;transform:translateX(-50%) translateY(10px);background:var(--green);color:white;padding:10px 20px;border-radius:20px;font-size:13px;font-weight:600;opacity:0;transition:all 0.3s;z-index:200;white-space:nowrap;pointer-events:none}
+.toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+.toast.purple{background:var(--purple)}
+</style>
+</head>
+<body>
+
+<div class="header">
+  <div class="bot-avatar">✍️</div>
+  <div>
+    <div class="bot-name">Готовая редакция</div>
+    <div class="bot-status">ИИ активен · собирает новости</div>
+  </div>
+  <div class="header-actions">
+    <button class="icon-btn">🔔</button>
+    <button class="icon-btn">⚙️</button>
+  </div>
+</div>
+
+<div class="tabs">
+  <div class="tab active" onclick="switchTab('queue',this)">📥 Очередь</div>
+  <div class="tab" onclick="switchTab('published',this)">📢 Канал</div>
+  <div class="tab" onclick="switchTab('stats',this)">📊 Статистика</div>
+  <div class="tab" onclick="switchTab('settings',this)">⚙️ Настройки</div>
+</div>
+
+<!-- QUEUE -->
+<div class="panel active" id="queue">
+
+  <div class="queue-item" id="item1">
+    <div class="queue-source">
+      <span class="source-icon">📰</span>
+      <span class="source-name">BBC News</span>
+      <span class="source-time">2 мин назад</span>
+    </div>
+    <div class="ai-badge">✨ Обработано ИИ</div>
+    <div class="queue-title">Европейский рынок акций показал рост на фоне позитивной статистики</div>
+    <div class="queue-preview">Индекс Euro Stoxx 50 вырос на 1.2% после выхода данных о снижении инфляции в еврозоне до 2.3%. Аналитики ожидают продолжения роста...</div>
+    <div class="queue-actions">
+      <button class="q-btn btn-publish" onclick="publishItem('item1','Европейский рынок акций показал рост')">✅ Опубликовать</button>
+      <button class="q-btn btn-edit" onclick="openEdit('item1','Европейский рынок акций показал рост на фоне позитивной статистики','Индекс Euro Stoxx 50 вырос на 1.2% после выхода данных о снижении инфляции в еврозоне до 2.3%. Аналитики ожидают продолжения роста на следующей неделе.')">✏️ Изменить</button>
+      <button class="q-btn btn-skip" onclick="skipItem('item1')">✕</button>
+    </div>
+  </div>
+
+  <div class="queue-item" id="item2">
+    <div class="queue-source">
+      <span class="source-icon">🌐</span>
+      <span class="source-name">Reuters</span>
+      <span class="source-time">15 мин назад</span>
+    </div>
+    <div class="ai-badge">✨ Обработано ИИ</div>
+    <div class="queue-title">ЕЦБ оставил ключевую ставку без изменений — 4.5%</div>
+    <div class="queue-preview">На заседании в четверг Европейский центральный банк принял решение сохранить ставку на уровне 4.5%. Глава ЕЦБ заявила, что решение о снижении будет зависеть от дальнейших данных...</div>
+    <div class="queue-actions">
+      <button class="q-btn btn-publish" onclick="publishItem('item2','ЕЦБ оставил ключевую ставку без изменений')">✅ Опубликовать</button>
+      <button class="q-btn btn-edit" onclick="openEdit('item2','ЕЦБ оставил ключевую ставку без изменений — 4.5%','На заседании в четверг Европейский центральный банк принял решение сохранить ставку на уровне 4.5%. Глава ЕЦБ заявила, что решение о снижении будет зависеть от дальнейших данных по инфляции.')">✏️ Изменить</button>
+      <button class="q-btn btn-skip" onclick="skipItem('item2')">✕</button>
+    </div>
+  </div>
+
+  <div class="queue-item" id="item3">
+    <div class="queue-source">
+      <span class="source-icon">📊</span>
+      <span class="source-name">Bloomberg</span>
+      <span class="source-time">32 мин назад</span>
+    </div>
+    <div class="ai-badge">✨ Обработано ИИ</div>
+    <div class="queue-title">Tesla представила обновлённую Model Y с запасом хода 650 км</div>
+    <div class="queue-preview">Компания Tesla анонсировала новую версию Model Y с увеличенным запасом хода и улучшенной системой автопилота. Продажи стартуют в следующем квартале...</div>
+    <div class="queue-actions">
+      <button class="q-btn btn-publish" onclick="publishItem('item3','Tesla представила обновлённую Model Y')">✅ Опубликовать</button>
+      <button class="q-btn btn-edit" onclick="openEdit('item3','Tesla представила обновлённую Model Y с запасом хода 650 км','Компания Tesla анонсировала новую версию Model Y с увеличенным запасом хода и улучшенной системой автопилота. Продажи стартуют в следующем квартале.')">✏️ Изменить</button>
+      <button class="q-btn btn-skip" onclick="skipItem('item3')">✕</button>
+    </div>
+  </div>
+
+  <div id="emptyQueue" style="display:none;text-align:center;padding:40px 20px;color:var(--sub)">
+    <div style="font-size:40px;margin-bottom:12px">📭</div>
+    <div style="font-size:15px;font-weight:600;margin-bottom:6px">Очередь пуста</div>
+    <div style="font-size:13px">ИИ собирает новые материалы...</div>
+  </div>
+</div>
+
+<!-- PUBLISHED -->
+<div class="panel" id="published">
+  <div class="pub-item">
+    <div class="pub-header">
+      <div class="pub-title">📈 Биткоин преодолел отметку $68 000</div>
+      <div class="pub-time">09:15</div>
+    </div>
+    <div class="pub-text">Главная криптовалюта продолжает рост на фоне ожидания решения ФРС по ставке. Аналитики прогнозируют тест уровня $70 000 в ближайшие дни.</div>
+    <div class="pub-stats">
+      <div class="pub-stat">👁 <span>1 842</span></div>
+      <div class="pub-stat">❤️ <span>124</span></div>
+      <div class="pub-stat">🔄 <span>38</span></div>
+    </div>
+  </div>
+  <div class="pub-item">
+    <div class="pub-header">
+      <div class="pub-title">🏦 ФРС США сохранила ставку на уровне 5.25%</div>
+      <div class="pub-time">вчера</div>
+    </div>
+    <div class="pub-text">Федеральная резервная система оставила ставку неизменной, намекнув на возможное снижение в следующем квартале при условии замедления инфляции.</div>
+    <div class="pub-stats">
+      <div class="pub-stat">👁 <span>3 210</span></div>
+      <div class="pub-stat">❤️ <span>287</span></div>
+      <div class="pub-stat">🔄 <span>91</span></div>
+    </div>
+  </div>
+  <div class="pub-item">
+    <div class="pub-header">
+      <div class="pub-title">🇪🇺 Инфляция в еврозоне снизилась до 2.3%</div>
+      <div class="pub-time">2 дня назад</div>
+    </div>
+    <div class="pub-text">Официальные данные Eurostat зафиксировали снижение инфляции до целевого уровня ЕЦБ. Евро укрепился по отношению к доллару на 0.4%.</div>
+    <div class="pub-stats">
+      <div class="pub-stat">👁 <span>2 540</span></div>
+      <div class="pub-stat">❤️ <span>198</span></div>
+      <div class="pub-stat">🔄 <span>64</span></div>
+    </div>
+  </div>
+</div>
+
+<!-- STATS -->
+<div class="panel" id="stats">
+  <div class="stats-grid">
+    <div class="stat-box"><div class="stat-big" style="color:var(--accent2)">847</div><div class="stat-lbl">Подписчиков</div></div>
+    <div class="stat-box"><div class="stat-big" style="color:var(--green)">+43</div><div class="stat-lbl">За неделю</div></div>
+    <div class="stat-box"><div class="stat-big" style="color:var(--purple2)">24</div><div class="stat-lbl">Постов за месяц</div></div>
+    <div class="stat-box"><div class="stat-big" style="color:var(--orange)">2.4k</div><div class="stat-lbl">Охват среднего поста</div></div>
+  </div>
+  <div class="setting-group">
+    <div class="setting-title">Активность по дням</div>
+    <div style="padding:14px">
+      <div class="activity-bar">
+        <div class="bar" style="height:40%"></div>
+        <div class="bar" style="height:65%"></div>
+        <div class="bar" style="height:50%"></div>
+        <div class="bar" style="height:80%"></div>
+        <div class="bar" style="height:45%"></div>
+        <div class="bar" style="height:90%"></div>
+        <div class="bar today" style="height:70%"></div>
+      </div>
+      <div style="display:flex;justify-content:space-between;margin-top:6px">
+        <span style="font-size:10px;color:var(--sub)">Пн</span>
+        <span style="font-size:10px;color:var(--sub)">Вт</span>
+        <span style="font-size:10px;color:var(--sub)">Ср</span>
+        <span style="font-size:10px;color:var(--sub)">Чт</span>
+        <span style="font-size:10px;color:var(--sub)">Пт</span>
+        <span style="font-size:10px;color:var(--sub)">Сб</span>
+        <span style="font-size:10px;color:var(--sub)">Вс</span>
+      </div>
+    </div>
+  </div>
+  <div class="setting-group">
+    <div class="setting-title">Топ постов</div>
+    <div class="setting-row"><div><div class="setting-label">ФРС сохранила ставку</div><div class="setting-sub">3 210 просмотров</div></div><span style="color:var(--accent2)">🥇</span></div>
+    <div class="setting-row"><div><div class="setting-label">Инфляция в еврозоне</div><div class="setting-sub">2 540 просмотров</div></div><span style="color:var(--sub)">🥈</span></div>
+    <div class="setting-row"><div><div class="setting-label">Биткоин $68 000</div><div class="setting-sub">1 842 просмотра</div></div><span style="color:var(--sub)">🥉</span></div>
+  </div>
+</div>
+
+<!-- SETTINGS -->
+<div class="panel" id="settings">
+  <div class="setting-group">
+    <div class="setting-title">Источники новостей</div>
+    <div class="sources-wrap">
+      <div class="source-chip active">📰 BBC News</div>
+      <div class="source-chip active">🌐 Reuters</div>
+      <div class="source-chip active">📊 Bloomberg</div>
+      <div class="source-chip">📡 RBC</div>
+      <div class="source-chip">🗞 Vedomosti</div>
+      <div class="source-chip active">📈 CoinDesk</div>
+      <div class="source-chip">+ Добавить</div>
+    </div>
+  </div>
+  <div class="setting-group">
+    <div class="setting-title">Автопубликация</div>
+    <div class="setting-row">
+      <div><div class="setting-label">Авто-публикация</div><div class="setting-sub">ИИ публикует без одобрения</div></div>
+      <div class="toggle off" onclick="this.classList.toggle('off')"></div>
+    </div>
+    <div class="setting-row">
+      <div><div class="setting-label">Частота проверки</div></div>
+      <select class="freq-select">
+        <option>Каждый час</option>
+        <option selected>Каждые 2 часа</option>
+        <option>Каждые 6 часов</option>
+      </select>
+    </div>
+    <div class="setting-row">
+      <div><div class="setting-label">Время публикаций</div><div class="setting-sub">09:00 — 21:00</div></div>
+      <div class="toggle" onclick="this.classList.toggle('off')"></div>
+    </div>
+  </div>
+  <div class="setting-group">
+    <div class="setting-title">ИИ обработка</div>
+    <div class="setting-row">
+      <div><div class="setting-label">Рерайт статей</div><div class="setting-sub">GPT переписывает тексты</div></div>
+      <div class="toggle" onclick="this.classList.toggle('off')"></div>
+    </div>
+    <div class="setting-row">
+      <div><div class="setting-label">Добавлять эмодзи</div><div class="setting-sub">К заголовкам постов</div></div>
+      <div class="toggle" onclick="this.classList.toggle('off')"></div>
+    </div>
+    <div class="setting-row">
+      <div><div class="setting-label">Фильтр дубликатов</div><div class="setting-sub">Не публиковать похожие</div></div>
+      <div class="toggle" onclick="this.classList.toggle('off')"></div>
+    </div>
+  </div>
+  <div class="setting-group">
+    <div class="setting-title">Telegram канал</div>
+    <div class="setting-row"><div><div class="setting-label">@my_news_channel</div><div class="setting-sub">Подключён ✅</div></div><span style="color:var(--green)">●</span></div>
+  </div>
+</div>
+
+<!-- EDIT MODAL -->
+<div class="modal-overlay" id="editModal">
+  <div class="modal">
+    <div class="modal-handle"></div>
+    <div class="modal-title">✏️ Редактировать пост</div>
+    <div class="edit-label">Заголовок</div>
+    <input class="edit-input" id="editTitle" type="text">
+    <div class="edit-label">Текст поста</div>
+    <textarea class="edit-input" id="editText" rows="5"></textarea>
+    <div class="edit-label">ИИ: улучшить текст</div>
+    <div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:4px">
+      <button class="q-btn btn-edit" style="flex:none;padding:6px 12px" onclick="aiRewrite()">✨ Рерайт</button>
+      <button class="q-btn btn-edit" style="flex:none;padding:6px 12px" onclick="aiShorten()">✂️ Короче</button>
+      <button class="q-btn btn-edit" style="flex:none;padding:6px 12px" onclick="aiEmoji()">😊 Эмодзи</button>
+    </div>
+    <div class="modal-actions">
+      <button class="modal-btn modal-publish" onclick="publishFromEdit()">📢 Опубликовать</button>
+      <button class="modal-btn modal-cancel" onclick="closeEdit()">Отмена</button>
+    </div>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+let currentEditItem = null;
+
+function switchTab(id, el){
+  document.querySelectorAll('.panel').forEach(p=>p.classList.remove('active'));
+  document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+  el.classList.add('active');
+}
+
+function publishItem(id, title){
+  document.getElementById(id).style.transition='all 0.3s';
+  document.getElementById(id).style.opacity='0';
+  document.getElementById(id).style.transform='translateX(100%)';
+  setTimeout(()=>{
+    document.getElementById(id).remove();
+    checkEmpty();
+  },300);
+  showToast('📢 Опубликовано: '+title,'green');
+}
+
+function skipItem(id){
+  document.getElementById(id).style.transition='all 0.3s';
+  document.getElementById(id).style.opacity='0';
+  setTimeout(()=>{
+    document.getElementById(id).remove();
+    checkEmpty();
+  },300);
+  showToast('🗑 Пропущено');
+}
+
+function checkEmpty(){
+  const items = document.querySelectorAll('#queue .queue-item');
+  if(items.length===0) document.getElementById('emptyQueue').style.display='block';
+}
+
+function openEdit(id, title, text){
+  currentEditItem = id;
+  document.getElementById('editTitle').value = title;
+  document.getElementById('editText').value = text;
+  document.getElementById('editModal').classList.add('show');
+}
+
+function closeEdit(){
+  document.getElementById('editModal').classList.remove('show');
+  currentEditItem = null;
+}
+
+function publishFromEdit(){
+  const title = document.getElementById('editTitle').value;
+  closeEdit();
+  if(currentEditItem) return;
+  showToast('📢 Опубликовано!','green');
+}
+
+function aiRewrite(){
+  const t = document.getElementById('editText');
+  t.value = '🤖 ИИ улучшил: ' + t.value.substring(0,80) + '... Текст переработан для лучшего восприятия аудитории.';
+  showToast('✨ ИИ переписал текст','purple');
+}
+function aiShorten(){
+  const t = document.getElementById('editText');
+  t.value = t.value.substring(0,80)+'...';
+  showToast('✂️ Текст сокращён');
+}
+function aiEmoji(){
+  const t = document.getElementById('editTitle');
+  if(!t.value.startsWith('📊')) t.value = '📊 ' + t.value;
+  showToast('😊 Эмодзи добавлены');
+}
+
+function showToast(msg, type='green'){
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.className = 'toast show' + (type==='purple'?' purple':'');
+  setTimeout(()=>t.classList.remove('show'),2200);
+}
+
+document.getElementById('editModal').addEventListener('click',function(e){
+  if(e.target===this) closeEdit();
+});
+</script>
+</body>
+</html>
