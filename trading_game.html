@@ -97,6 +97,15 @@ html,body{height:100%;background:var(--bg);color:var(--text);font-family:'JetBra
 .lb-rank{color:var(--sub);width:20px;font-size:11px}
 .lb-name{flex:1;color:#fff;font-weight:500}
 .lb-val{font-weight:700}
+.mode-tabs{display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-bottom:10px}
+.mode-tab{padding:8px;border-radius:9px;font-size:13px;font-weight:700;cursor:pointer;border:1px solid var(--border);background:var(--bg3);color:var(--sub);font-family:'JetBrains Mono',monospace;transition:all 0.15s}
+.mode-tab.long-active{background:var(--green-bg);border-color:var(--green-border);color:var(--green2)}
+.mode-tab.short-active{background:var(--red-bg);border-color:var(--red-border);color:var(--red2)}
+.short-pos{background:var(--red-bg);border:1px solid var(--red-border);border-radius:10px;padding:10px 12px;margin-bottom:10px;display:none}
+.short-pos-title{font-size:11px;color:var(--red2);font-weight:700;margin-bottom:6px;text-transform:uppercase;letter-spacing:1px}
+.short-pos-row{display:flex;justify-content:space-between;font-size:12px;margin-bottom:4px}
+.btn-close-short{width:100%;background:var(--red-bg);border:1px solid var(--red-border);color:var(--red2);border-radius:9px;padding:10px;font-size:13px;font-weight:700;cursor:pointer;font-family:'JetBrains Mono',monospace;margin-top:8px;transition:all 0.15s}
+.btn-close-short:active{background:var(--red-border);color:#fff}
 </style>
 </head>
 <body>
@@ -129,6 +138,10 @@ html,body{height:100%;background:var(--bg);color:var(--text);font-family:'JetBra
 
   <div class="trade-box">
     <div class="trade-hdr" id="trade-hdr">Торговля · BTC</div>
+    <div class="mode-tabs">
+      <button class="mode-tab long-active" id="tab-long" onclick="setMode('long')">▲ ЛОНГ</button>
+      <button class="mode-tab" id="tab-short" onclick="setMode('short')">▼ ШОРТ</button>
+    </div>
     <div class="inp-row">
       <span class="inp-lbl">Сумма $</span>
       <input class="inp" id="amt" type="number" value="100" min="1" inputmode="numeric">
@@ -140,10 +153,15 @@ html,body{height:100%;background:var(--bg);color:var(--text);font-family:'JetBra
       <button class="qb" onclick="sa(2500)">$2.5K</button>
       <button class="qb" onclick="sa(-1)">Всё</button>
     </div>
-    <div class="trade-btns">
+    <div class="trade-btns" id="trade-btns">
       <button class="btn-buy" onclick="trade('buy')">▲ КУПИТЬ</button>
       <button class="btn-sell" onclick="trade('sell')">▼ ПРОДАТЬ</button>
     </div>
+  </div>
+
+  <div class="short-pos" id="short-pos">
+    <div class="short-pos-title">Открытые шорты</div>
+    <div id="short-list"></div>
   </div>
 
   <div class="port-box">
@@ -173,8 +191,9 @@ const COINS=[
   {id:'ADA',sym:'ADAUSDT',name:'Cardano',p:0,candles:[],cur:{o:0,h:0,l:0,c:0,t:0},open24:0},
 ];
 
-let cash=10000,sel=0,hold={},logs=[],loaded=false;
+let cash=10000,sel=0,hold={},logs=[],loaded=false,tradeMode='long';
 const CANDLE_TICKS=30;
+let shorts={}; // {BTC: {size, entryPrice, collateral}}
 
 const LEADERS=[
   {name:'CryptoWolf',val:24831},
@@ -184,11 +203,18 @@ const LEADERS=[
   {name:'ETHhunter',val:11890},
 ];
 
-COINS.forEach(c=>{ hold[c.id]=0; });
+COINS.forEach(c=>{ hold[c.id]=0; shorts[c.id]=null; });
 
 const fp=n=>n<1?n.toFixed(4):n>1000?n.toFixed(0):n>100?n.toFixed(1):n.toFixed(2);
 const fd=(n,d=2)=>(n<0?'-':'')+'$'+Math.abs(n).toFixed(d).replace(/\B(?=(\d{3})+(?!\d))/g,',');
-function tv(){let v=cash;COINS.forEach(c=>v+=hold[c.id]*c.p);return v;}
+function tv(){
+  let v=cash;
+  COINS.forEach(c=>{
+    v+=hold[c.id]*c.p;
+    if(shorts[c.id]&&c.p){const s=shorts[c.id];v+=s.collateral+(s.entryPrice-c.p)*s.size;}
+  });
+  return v;
+}
 
 async function fetchPrices(){
   try{
@@ -317,7 +343,7 @@ function rLog(){
   el.innerHTML=logs.slice(-10).reverse().map(l=>`<div class="litem">${l}</div>`).join('');
 }
 
-function rAll(){rCoins();drawChart();rPort();rBal();rTicker();rLeaders();rLog();}
+function rAll(){rCoins();drawChart();rPort();rBal();rTicker();rLeaders();rLog();rShorts();}
 
 function selC(i){sel=i;document.getElementById('trade-hdr').textContent=`Торговля · ${COINS[i].id}`;rAll();}
 function sa(n){document.getElementById('amt').value=n<0?Math.floor(cash):n;}
@@ -331,13 +357,79 @@ function showToast(msg,ok){
   if(tg)tg.HapticFeedback?.notificationOccurred(ok?'success':'error');
 }
 
+function setMode(mode){
+  tradeMode=mode;
+  const tl=document.getElementById('tab-long');
+  const ts=document.getElementById('tab-short');
+  const tb=document.getElementById('trade-btns');
+  if(mode==='long'){
+    tl.className='mode-tab long-active';
+    ts.className='mode-tab';
+    tb.innerHTML='<button class="btn-buy" onclick="trade(\'buy\')">▲ КУПИТЬ</button><button class="btn-sell" onclick="trade(\'sell\')">▼ ПРОДАТЬ</button>';
+  } else {
+    tl.className='mode-tab';
+    ts.className='mode-tab short-active';
+    tb.innerHTML='<button class="btn-sell" style="grid-column:1/-1" onclick="trade(\'short\')">▼ ОТКРЫТЬ ШОРТ</button>';
+  }
+}
+
+function rShorts(){
+  let hasShort=false;
+  let html='';
+  COINS.forEach(c=>{
+    const s=shorts[c.id];
+    if(!s||!c.p) return;
+    hasShort=true;
+    const pnl=(s.entryPrice-c.p)*s.size;
+    const pnlPct=(pnl/s.collateral*100);
+    const col=pnl>=0?'var(--green2)':'var(--red2)';
+    html+=`<div style="background:var(--bg3);border-radius:8px;padding:8px;margin-bottom:8px">
+      <div class="short-pos-row"><span style="color:#fff;font-weight:700">${c.id} ШОРТ</span><span style="color:${col};font-weight:700">${pnl>=0?'+':''}${fd(pnl)} (${pnlPct>=0?'+':''}${pnlPct.toFixed(2)}%)</span></div>
+      <div class="short-pos-row"><span style="color:var(--sub)">Вход</span><span>${fp(s.entryPrice)}</span></div>
+      <div class="short-pos-row"><span style="color:var(--sub)">Текущая</span><span>${fp(c.p)}</span></div>
+      <div class="short-pos-row"><span style="color:var(--sub)">Размер</span><span>${fd(s.collateral)}</span></div>
+      <button class="btn-close-short" onclick="closeShort('${c.id}')">✕ ЗАКРЫТЬ ШОРТ ${c.id}</button>
+    </div>`;
+  });
+  const el=document.getElementById('short-pos');
+  const sl=document.getElementById('short-list');
+  el.style.display=hasShort?'block':'none';
+  sl.innerHTML=html;
+}
+
+function closeShort(id){
+  const c=COINS.find(x=>x.id===id);
+  const s=shorts[id];
+  if(!s||!c.p) return;
+  const pnl=(s.entryPrice-c.p)*s.size;
+  const returned=s.collateral+pnl;
+  if(returned<0){showToast(`${id} ликвидирован! -${fd(s.collateral)}`,false);}
+  else{
+    cash+=returned;
+    const now=new Date().toLocaleTimeString('ru',{hour:'2-digit',minute:'2-digit'});
+    logs.push(`${now} · <span class="sell-tag">ЗАКРЫЛ ШОРТ</span> <span class="coin-tag">${id}</span> ${pnl>=0?'+':''}${fd(pnl)} @ ${fp(c.p)}`);
+    showToast(`Шорт ${id} закрыт ${pnl>=0?'+':''}${fd(pnl)}`,pnl>=0);
+  }
+  shorts[id]=null;
+  rAll();
+}
+
 function trade(type){
   const c=COINS[sel];
   if(!c.p){showToast('Ждём цены Binance...',false);return;}
   const amt=parseFloat(document.getElementById('amt').value)||0;
   if(amt<=0){showToast('Введите сумму!',false);return;}
   const now=new Date().toLocaleTimeString('ru',{hour:'2-digit',minute:'2-digit'});
-  if(type==='buy'){
+
+  if(type==='short'){
+    if(amt>cash+0.01){showToast('Недостаточно USD!',false);return;}
+    if(shorts[c.id]){showToast(`Шорт ${c.id} уже открыт!`,false);return;}
+    const size=amt/c.p;
+    cash-=amt;
+    shorts[c.id]={size,entryPrice:c.p,collateral:amt};
+    logs.push(`${now} · <span class="sell-tag">ШОРТ</span> <span class="coin-tag">${c.id}</span> ${fd(amt)} @ ${fp(c.p)}`);
+    showToast(`Шорт ${c.id} открыт на ${fd(amt)}`,true);
+  } else if(type==='buy'){
     if(amt>cash+0.01){showToast('Недостаточно USD!',false);return;}
     const coins=amt/c.p;cash-=amt;hold[c.id]+=coins;
     logs.push(`${now} · <span class="buy-tag">КУПИЛ</span> <span class="coin-tag">${c.id}</span> на ${fd(amt)} @ ${fp(c.p)}`);
