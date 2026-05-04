@@ -167,13 +167,14 @@ const tg = window.Telegram?.WebApp;
 if(tg){ tg.ready(); tg.expand(); }
 
 const COINS=[
-  {id:'BTC',name:'Bitcoin',p:67420,candles:[],cur:{o:0,h:0,l:0,c:0,t:0}},
-  {id:'ETH',name:'Ethereum',p:3512,candles:[],cur:{o:0,h:0,l:0,c:0,t:0}},
-  {id:'SOL',name:'Solana',p:178,candles:[],cur:{o:0,h:0,l:0,c:0,t:0}},
-  {id:'ADA',name:'Cardano',p:0.68,candles:[],cur:{o:0,h:0,l:0,c:0,t:0}},
+  {id:'BTC',sym:'BTCUSDT',name:'Bitcoin',p:0,candles:[],cur:{o:0,h:0,l:0,c:0,t:0},open24:0},
+  {id:'ETH',sym:'ETHUSDT',name:'Ethereum',p:0,candles:[],cur:{o:0,h:0,l:0,c:0,t:0},open24:0},
+  {id:'SOL',sym:'SOLUSDT',name:'Solana',p:0,candles:[],cur:{o:0,h:0,l:0,c:0,t:0},open24:0},
+  {id:'ADA',sym:'ADAUSDT',name:'Cardano',p:0,candles:[],cur:{o:0,h:0,l:0,c:0,t:0},open24:0},
 ];
 
-let cash=10000,sel=0,hold={},logs=[];
+let cash=10000,sel=0,hold={},logs=[],loaded=false;
+const CANDLE_TICKS=30;
 
 const LEADERS=[
   {name:'CryptoWolf',val:24831},
@@ -183,41 +184,70 @@ const LEADERS=[
   {name:'ETHhunter',val:11890},
 ];
 
-COINS.forEach(c=>{
-  hold[c.id]=0;
-  let p=c.p;
-  for(let i=0;i<35;i++){
-    const o=p,h=o*(1+Math.random()*0.014),l=o*(1-Math.random()*0.014),cl=l+(h-l)*Math.random();
-    c.candles.push({o,h,l,c:cl});p=cl;
-  }
-  c.p=p;c.cur={o:p,h:p,l:p,c:p,t:0};
-});
+COINS.forEach(c=>{ hold[c.id]=0; });
 
 const fp=n=>n<1?n.toFixed(4):n>1000?n.toFixed(0):n>100?n.toFixed(1):n.toFixed(2);
 const fd=(n,d=2)=>(n<0?'-':'')+'$'+Math.abs(n).toFixed(d).replace(/\B(?=(\d{3})+(?!\d))/g,',');
-
 function tv(){let v=cash;COINS.forEach(c=>v+=hold[c.id]*c.p);return v;}
+
+async function fetchPrices(){
+  try{
+    const syms=COINS.map(c=>`"${c.sym}"`).join(',');
+    const res=await fetch(`https://api.binance.com/api/v3/ticker/24hr?symbols=[${syms}]`);
+    const data=await res.json();
+    data.forEach(d=>{
+      const coin=COINS.find(c=>c.sym===d.symbol);
+      if(!coin) return;
+      const newP=parseFloat(d.lastPrice);
+      coin.open24=parseFloat(d.openPrice);
+      if(!loaded||coin.p===0){
+        coin.p=newP;
+        coin.cur={o:newP,h:newP,l:newP,c:newP,t:0};
+      } else {
+        coin.p=newP;
+        coin.cur.h=Math.max(coin.cur.h,newP);
+        coin.cur.l=Math.min(coin.cur.l===0?newP:coin.cur.l,newP);
+        coin.cur.c=newP;coin.cur.t++;
+        if(coin.cur.t>=CANDLE_TICKS){
+          coin.candles.push({...coin.cur});
+          if(coin.candles.length>60)coin.candles.shift();
+          coin.cur={o:newP,h:newP,l:newP,c:newP,t:0};
+        }
+      }
+    });
+    if(!loaded){await fetchKlines();loaded=true;}
+    rAll();
+  }catch(e){console.log('fetch err',e);}
+}
+
+async function fetchKlines(){
+  for(const coin of COINS){
+    try{
+      const res=await fetch(`https://api.binance.com/api/v3/klines?symbol=${coin.sym}&interval=1m&limit=40`);
+      const data=await res.json();
+      coin.candles=data.slice(0,-1).map(k=>({o:parseFloat(k[1]),h:parseFloat(k[2]),l:parseFloat(k[3]),c:parseFloat(k[4]),t:0}));
+    }catch(e){console.log('klines err',e);}
+  }
+}
 
 function drawChart(){
   const svg=document.getElementById('chartSvg');
   const coin=COINS[sel];
+  if(!coin.p)return;
   const candles=[...coin.candles.slice(-28),{...coin.cur,c:coin.p}];
+  if(candles.length<2)return;
   const allH=candles.map(c=>c.h),allL=candles.map(c=>c.l);
   const mx=Math.max(...allH),mn=Math.min(...allL),rng=mx-mn||1;
   const W=400,H=100,pad=4,n=candles.length;
-  const cw=Math.floor((W-pad*2)/n);
-  const gw=Math.max(2,cw-2);
+  const cw=Math.floor((W-pad*2)/n),gw=Math.max(2,cw-2);
   let html='';
   candles.forEach((c,i)=>{
-    const x=pad+i*cw;
-    const bull=c.c>=c.o;
-    const col=bull?'#22c55e':'#ef4444';
+    const x=pad+i*cw,bull=c.c>=c.o,col=bull?'#22c55e':'#ef4444';
     const yH=(pad+(1-(c.h-mn)/rng)*(H-pad*2)).toFixed(1);
     const yL=(pad+(1-(c.l-mn)/rng)*(H-pad*2)).toFixed(1);
     const yO=(pad+(1-(c.o-mn)/rng)*(H-pad*2)).toFixed(1);
     const yC=(pad+(1-(c.c-mn)/rng)*(H-pad*2)).toFixed(1);
-    const bT=Math.min(+yO,+yC).toFixed(1);
-    const bH=Math.max(1,Math.abs(+yO-+yC)).toFixed(1);
+    const bT=Math.min(+yO,+yC).toFixed(1),bH=Math.max(1,Math.abs(+yO-+yC)).toFixed(1);
     const cx=(x+gw/2).toFixed(1);
     html+=`<line x1="${cx}" y1="${yH}" x2="${cx}" y2="${yL}" stroke="${col}" stroke-width="1"/>`;
     html+=`<rect x="${x}" y="${bT}" width="${gw}" height="${bH}" fill="${col}"/>`;
@@ -225,20 +255,19 @@ function drawChart(){
   svg.innerHTML=html;
   const last=candles[candles.length-1];
   document.getElementById('ohlc').textContent=`O:${fp(last.o)} H:${fp(last.h)} L:${fp(last.l)} C:${fp(coin.p)}`;
-  document.getElementById('ctitle').textContent=`${coin.id}/USD — ${fp(coin.p)}`;
+  document.getElementById('ctitle').textContent=`${coin.id}/USD · 1m · ${fp(coin.p)}`;
 }
 
 function rCoins(){
   document.getElementById('coins').innerHTML=COINS.map((c,i)=>{
-    const prev=c.candles.length?c.candles[c.candles.length-1].c:c.p;
-    const chg=(c.p-prev)/prev*100;
+    const chg=c.open24>0?(c.p-c.open24)/c.open24*100:0;
     const col=chg>=0?'var(--green2)':'var(--red2)';
     const owned=hold[c.id];
     return `<div class="coin${i===sel?' sel':''}" onclick="selC(${i})">
       <div class="coin-id">${c.id}</div>
       <div class="coin-name">${c.name}</div>
-      <div class="coin-price">${fp(c.p)}</div>
-      <div class="coin-chg" style="color:${col}">${chg>=0?'+':''}${chg.toFixed(2)}%</div>
+      <div class="coin-price">${c.p?fp(c.p):'...'}</div>
+      <div class="coin-chg" style="color:${col}">${chg>=0?'+':''}${chg.toFixed(2)}% 24h</div>
       ${owned>0.000001?`<div class="coin-hold">${owned.toFixed(owned>1?2:5)} монет</div>`:''}
     </div>`;
   }).join('');
@@ -248,10 +277,7 @@ function rPort(){
   let html='';
   COINS.forEach(c=>{
     if(hold[c.id]>0.000001){
-      html+=`<div class="prow">
-        <div><div class="prow-name">${c.id}</div><div class="prow-sub">${hold[c.id].toFixed(hold[c.id]>1?3:5)} монет</div></div>
-        <div style="text-align:right"><div style="color:#fff;font-weight:700">${fd(hold[c.id]*c.p)}</div></div>
-      </div>`;
+      html+=`<div class="prow"><div><div class="prow-name">${c.id}</div><div class="prow-sub">${hold[c.id].toFixed(hold[c.id]>1?3:5)} монет</div></div><div style="text-align:right"><div style="color:#fff;font-weight:700">${fd(hold[c.id]*c.p)}</div></div></div>`;
     }
   });
   html+=`<div class="prow"><div class="prow-name">USD</div><div style="color:var(--accent2);font-weight:700">${fd(cash)}</div></div>`;
@@ -268,10 +294,9 @@ function rBal(){
 
 function rTicker(){
   document.getElementById('ticker').innerHTML=COINS.map(c=>{
-    const prev=c.candles.length?c.candles[c.candles.length-1].c:c.p;
-    const chg=(c.p-prev)/prev*100;
+    const chg=c.open24>0?(c.p-c.open24)/c.open24*100:0;
     const col=chg>=0?'var(--green2)':'var(--red2)';
-    return `<div class="tick">${c.id}<b style="color:${col}">${fp(c.p)} ${chg>=0?'▲':'▼'}${Math.abs(chg).toFixed(2)}%</b></div>`;
+    return `<div class="tick">${c.id}<b style="color:${col}">${c.p?fp(c.p):'...'} ${chg>=0?'▲':'▼'}${Math.abs(chg).toFixed(2)}%</b></div>`;
   }).join('');
 }
 
@@ -282,11 +307,7 @@ function rLeaders(){
   const medals=['🥇','🥈','🥉'];
   document.getElementById('lb').innerHTML=all.slice(0,6).map((p,i)=>{
     const col=p.val>=10000?'var(--green2)':'var(--red2)';
-    return `<div class="lb-row">
-      <span class="lb-rank">${medals[i]||i+1}</span>
-      <span class="lb-name"${p.me?' style="color:var(--accent2)"':''}>${p.name}${p.me?' ◄':''}</span>
-      <span class="lb-val" style="color:${col}">${fd(p.val,0)}</span>
-    </div>`;
+    return `<div class="lb-row"><span class="lb-rank">${medals[i]||i+1}</span><span class="lb-name"${p.me?' style="color:var(--accent2)"':''}>${p.name}${p.me?' ◄':''}</span><span class="lb-val" style="color:${col}">${fd(p.val,0)}</span></div>`;
   }).join('');
 }
 
@@ -298,67 +319,45 @@ function rLog(){
 
 function rAll(){rCoins();drawChart();rPort();rBal();rTicker();rLeaders();rLog();}
 
-function selC(i){
-  sel=i;
-  document.getElementById('trade-hdr').textContent=`Торговля · ${COINS[i].id}`;
-  rAll();
-}
-
+function selC(i){sel=i;document.getElementById('trade-hdr').textContent=`Торговля · ${COINS[i].id}`;rAll();}
 function sa(n){document.getElementById('amt').value=n<0?Math.floor(cash):n;}
 
 function showToast(msg,ok){
   const t=document.getElementById('toast');
-  t.textContent=msg;
-  t.style.background=ok?'var(--green-bg)':'var(--red-bg)';
+  t.textContent=msg;t.style.background=ok?'var(--green-bg)':'var(--red-bg)';
   t.style.border=`1px solid ${ok?'var(--green-border)':'var(--red-border)'}`;
   t.style.color=ok?'var(--green2)':'var(--red2)';
-  t.classList.add('show');
-  setTimeout(()=>t.classList.remove('show'),2000);
-  if(tg) tg.HapticFeedback?.notificationOccurred(ok?'success':'error');
+  t.classList.add('show');setTimeout(()=>t.classList.remove('show'),2000);
+  if(tg)tg.HapticFeedback?.notificationOccurred(ok?'success':'error');
 }
 
 function trade(type){
   const c=COINS[sel];
+  if(!c.p){showToast('Ждём цены Binance...',false);return;}
   const amt=parseFloat(document.getElementById('amt').value)||0;
   if(amt<=0){showToast('Введите сумму!',false);return;}
   const now=new Date().toLocaleTimeString('ru',{hour:'2-digit',minute:'2-digit'});
   if(type==='buy'){
     if(amt>cash+0.01){showToast('Недостаточно USD!',false);return;}
-    const coins=amt/c.p;
-    cash-=amt;hold[c.id]+=coins;
+    const coins=amt/c.p;cash-=amt;hold[c.id]+=coins;
     logs.push(`${now} · <span class="buy-tag">КУПИЛ</span> <span class="coin-tag">${c.id}</span> на ${fd(amt)} @ ${fp(c.p)}`);
     showToast(`Куплено ${coins.toFixed(coins>1?2:5)} ${c.id}`,true);
   } else {
     const coins=amt/c.p;
     if(coins>hold[c.id]+0.000001){showToast('Недостаточно монет!',false);return;}
-    hold[c.id]-=coins;if(hold[c.id]<0.000001)hold[c.id]=0;
-    cash+=amt;
+    hold[c.id]-=coins;if(hold[c.id]<0.000001)hold[c.id]=0;cash+=amt;
     logs.push(`${now} · <span class="sell-tag">ПРОДАЛ</span> <span class="coin-tag">${c.id}</span> на ${fd(amt)} @ ${fp(c.p)}`);
     showToast(`Продано на ${fd(amt)}`,true);
   }
   rAll();
 }
 
-let tickN=0;
-function tick(){
-  tickN++;
-  COINS.forEach(c=>{
-    const d=(Math.random()-0.485)*0.004+(Math.random()-0.5)*0.007;
-    const newP=Math.max(c.p*0.2,c.p*(1+d));
-    c.cur.h=Math.max(c.cur.h,newP);
-    c.cur.l=Math.min(c.cur.l===0?newP:c.cur.l,newP);
-    c.cur.c=newP;c.p=newP;c.cur.t++;
-    if(c.cur.t>=6){
-      c.candles.push({...c.cur});
-      if(c.candles.length>60)c.candles.shift();
-      c.cur={o:newP,h:newP,l:newP,c:newP,t:0};
-    }
-  });
-  rAll();
-}
+fetchPrices();
+setInterval(fetchPrices,2000);
+</script>
 
-rAll();
-setInterval(tick,2000);
+function tv(){let v=cash;COINS.forEach(c=>v+=hold[c.id]*c.p);return v;}
+
 </script>
 </body>
 </html>
