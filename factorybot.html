@@ -1,0 +1,607 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Журнал производственной линии — Демо</title>
+<style>
+  * { margin:0; padding:0; box-sizing:border-box; -webkit-tap-highlight-color:transparent; }
+
+  :root {
+    --tg-bg:     #0e1621;
+    --tg-bg2:    #17212b;
+    --tg-bot:    #182533;
+    --tg-user:   #2b5278;
+    --tg-text:   #ffffff;
+    --tg-sub:    #708499;
+    --tg-accent: #5288c1;
+    --tg-green:  #4dcd5e;
+    --tg-yellow: #ffd166;
+    --tg-red:    #e54848;
+    --tg-border: #1a2735;
+  }
+
+  html, body { height: 100%; }
+
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    background: var(--tg-bg);
+    color: var(--tg-text);
+    display: flex;
+    flex-direction: column;
+    height: 100vh;
+    overflow: hidden;
+    font-size: 14px;
+  }
+
+  /* Header */
+  .header {
+    background: var(--tg-bg2);
+    padding: 10px 14px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    border-bottom: 1px solid var(--tg-border);
+    flex-shrink: 0;
+  }
+  .avatar {
+    width: 38px;
+    height: 38px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, #3a6e3a, #1f4d1f);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 20px;
+  }
+  .chat-name { font-size: 15px; font-weight: 600; }
+  .chat-sub  { font-size: 12px; color: var(--tg-sub); margin-top: 1px; }
+
+  /* Messages */
+  .chat {
+    flex: 1;
+    overflow-y: auto;
+    padding: 12px 10px 8px;
+    background: var(--tg-bg);
+    background-image: radial-gradient(circle at 20% 30%, rgba(82,136,193,0.04) 0%, transparent 50%);
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+  }
+
+  .msg {
+    max-width: 88%;
+    padding: 8px 12px;
+    border-radius: 12px;
+    line-height: 1.45;
+    word-wrap: break-word;
+    white-space: pre-wrap;
+    animation: appear .25s ease;
+    font-size: 14px;
+  }
+  @keyframes appear {
+    from { opacity: 0; transform: translateY(6px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+
+  .msg.bot {
+    background: var(--tg-bot);
+    align-self: flex-start;
+    border-bottom-left-radius: 4px;
+  }
+  .msg.user {
+    background: var(--tg-user);
+    align-self: flex-end;
+    border-bottom-right-radius: 4px;
+  }
+  .msg .time {
+    font-size: 11px;
+    color: var(--tg-sub);
+    margin-top: 4px;
+    text-align: right;
+  }
+  .msg b { font-weight: 700; }
+  .msg i { color: var(--tg-sub); font-style: normal; font-size: 12px; }
+
+  /* Keyboard */
+  .keyboard {
+    background: var(--tg-bg2);
+    padding: 6px 6px 8px;
+    display: grid;
+    gap: 5px;
+    grid-template-columns: 1fr 1fr;
+    border-top: 1px solid var(--tg-border);
+    flex-shrink: 0;
+  }
+  .keyboard.cols-1 { grid-template-columns: 1fr; }
+  .key-btn {
+    background: #2c3e50;
+    color: var(--tg-text);
+    border: none;
+    padding: 11px 8px;
+    border-radius: 8px;
+    font-size: 13px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: background .15s;
+    font-family: inherit;
+  }
+  .key-btn:active { background: #34495e; }
+  .key-btn.full { grid-column: 1 / -1; }
+  .key-btn.cancel { background: #2a2f38; color: var(--tg-sub); }
+  .key-btn.green  { background: #2d7d3a; }
+  .key-btn.green:active  { background: #38994a; }
+
+  /* Banner */
+  .banner {
+    background: rgba(82,136,193,0.12);
+    border-top: 1px solid var(--tg-border);
+    padding: 8px 14px;
+    font-size: 12px;
+    color: var(--tg-sub);
+    text-align: center;
+    flex-shrink: 0;
+  }
+  .banner b { color: var(--tg-accent); }
+</style>
+</head>
+<body>
+
+<div class="header">
+  <div class="avatar">🏭</div>
+  <div>
+    <div class="chat-name">Журнал линии</div>
+    <div class="chat-sub" id="chatSub">бот</div>
+  </div>
+</div>
+
+<div class="chat" id="chat"></div>
+
+<div class="keyboard" id="kb"></div>
+
+<div class="banner">Это <b>демо</b> — бот работает на реальном заводе</div>
+
+<script>
+// ──────────────────────────────────────────────
+// Демо-данные: неделя реальной работы
+// ──────────────────────────────────────────────
+const TODAY = "15.05.2026";
+const NOW = "14:23";
+
+const demoData = {
+  "15.05.2026": {
+    start: "08:05", start_delay: 5, start_note: "Долго грелись компрессоры",
+    stops: [
+      { type:"lunch", from:"12:00", to:"12:35", mins:35, reason:"" },
+      { type:"paint", from:"13:40", to:"13:52", mins:12, reason:"С чёрной на белую" },
+    ],
+    end: null
+  },
+  "14.05.2026": {
+    start: "08:00", start_delay: 0,
+    stops: [
+      { type:"lunch", from:"12:00", to:"12:28", mins:28, reason:"" },
+      { type:"tech", from:"15:20", to:"15:55", mins:35, reason:"Засор форсунки" },
+    ],
+    end: "20:00"
+  },
+  "13.05.2026": {
+    start: "08:00", start_delay: 0,
+    stops: [{ type:"lunch", from:"12:05", to:"12:30", mins:25, reason:"" }],
+    end: "20:00"
+  },
+  "12.05.2026": {
+    start: "08:12", start_delay: 12, start_note: "Электрик не пришёл вовремя",
+    stops: [
+      { type:"lunch", from:"12:00", to:"12:45", mins:45, reason:"Обсуждали новый заказ" },
+      { type:"paint", from:"16:10", to:"16:20", mins:10, reason:"" },
+    ],
+    end: "20:00"
+  },
+  "11.05.2026": {
+    start: "08:00", start_delay: 0,
+    stops: [
+      { type:"lunch", from:"12:00", to:"12:30", mins:30, reason:"" },
+      { type:"tech", from:"10:30", to:"11:25", mins:55, reason:"Сломался конвейер, чинили" },
+    ],
+    end: "20:00"
+  },
+};
+
+// ──────────────────────────────────────────────
+// Состояние
+// ──────────────────────────────────────────────
+let state = "idle";
+let stopCtx = {};
+
+// ──────────────────────────────────────────────
+// Хелперы
+// ──────────────────────────────────────────────
+function fmtMins(m) {
+  m = Math.max(0, parseInt(m));
+  if (m < 60) return m + " мин";
+  const h = Math.floor(m / 60), r = m % 60;
+  return r ? `${h} ч ${r} мин` : `${h} ч`;
+}
+
+function stopDowntime(s) {
+  return s.type === "lunch" ? Math.max(0, s.mins - 30) : s.mins;
+}
+
+function totalDowntime(day) {
+  let d = (day.stops || []).reduce((a, s) => a + stopDowntime(s), 0);
+  return d + (day.start_delay || 0);
+}
+
+function efficiency(down) {
+  return Math.max(0, Math.round(((720 - down) / 720) * 100));
+}
+
+function typeIcon(t) {
+  return { lunch:"🍽", tech:"🔧", paint:"🎨", other:"📝", end:"🔚" }[t] || "⏸";
+}
+function typeLabel(t) {
+  return { lunch:"Обед", tech:"Поломка", paint:"Смена краски", other:"Другое", end:"Конец работы" }[t] || t;
+}
+
+// ──────────────────────────────────────────────
+// Сообщения
+// ──────────────────────────────────────────────
+function addMsg(text, who="bot") {
+  const chat = document.getElementById("chat");
+  const div = document.createElement("div");
+  div.className = "msg " + who;
+  const time = new Date().toLocaleTimeString("ru-RU", { hour:"2-digit", minute:"2-digit" });
+  div.innerHTML = text.replace(/\*(.+?)\*/g, "<b>$1</b>") + `<div class="time">${time}</div>`;
+  chat.appendChild(div);
+  chat.scrollTop = chat.scrollHeight;
+}
+
+function setKeyboard(buttons, cols=2) {
+  const kb = document.getElementById("kb");
+  kb.innerHTML = "";
+  kb.className = "keyboard" + (cols === 1 ? " cols-1" : "");
+  buttons.forEach(b => {
+    const btn = document.createElement("button");
+    btn.className = "key-btn" + (b.cls ? " " + b.cls : "");
+    btn.textContent = b.text;
+    btn.onclick = () => handle(b.text);
+    if (b.full) btn.classList.add("full");
+    kb.appendChild(btn);
+  });
+}
+
+// ──────────────────────────────────────────────
+// Главное меню
+// ──────────────────────────────────────────────
+function mainMenu() {
+  state = "idle";
+  setKeyboard([
+    { text:"📅 Сегодня" },        { text:"📆 Выбрать дату" },
+    { text:"📊 За неделю" },      { text:"📈 За месяц" },
+    { text:"▶️ Запустить линию", cls:"green" }, { text:"⏸ Остановить линию" },
+  ]);
+}
+
+// ──────────────────────────────────────────────
+// Форматирование отчётов
+// ──────────────────────────────────────────────
+function formatDay(dateKey, day) {
+  let s = `📅 *${dateKey}*\n\n`;
+  if (day.start) {
+    const icon = day.start_delay === 0 ? "✅" : "⚠️";
+    s += `▶️ *Запуск линии — ${day.start}*\n`;
+    if (day.start_note) s += `   📝 ${day.start_note}\n`;
+    s += day.start_delay > 0
+      ? `   ${icon} Задержка: +${fmtMins(day.start_delay)}\n`
+      : `   ${icon} Вовремя\n`;
+  } else {
+    s += `▶️ Запуск не зафиксирован\n`;
+  }
+  s += "\n";
+  for (const st of (day.stops || [])) {
+    const real = stopDowntime(st);
+    s += `${typeIcon(st.type)} *${typeLabel(st.type)}* — ${st.from} → ${st.to}\n`;
+    if (st.reason) s += `   📝 ${st.reason}\n`;
+    if (st.type === "lunch") {
+      s += `   🕐 Длился: ${fmtMins(st.mins)}\n`;
+      s += real > 0
+        ? `   🔴 Простой: ${fmtMins(real)} (сверх нормы)\n`
+        : `   🟢 В норме (≤30 мин)\n`;
+    } else {
+      s += `   ⏱ Простой: ${fmtMins(st.mins)}\n`;
+    }
+  }
+  if (day.end) {
+    s += `\n🔚 *Конец работы — ${day.end}*\n`;
+  }
+  const down = totalDowntime(day);
+  s += `\n─────────────────\n`;
+  s += `⏱ Реальный простой: *${fmtMins(down)}*\n`;
+  s += `📊 Эффективность: *${efficiency(down)}%*\n`;
+  s += `_(смена 12 ч · обед 30 мин не простой)_`;
+  return s;
+}
+
+function formatWeek() {
+  let s = "📊 *Статистика за неделю*\n\n";
+  let totalDown = 0, totalDelay = 0, totalStops = 0, workDays = 0;
+  const dates = Object.keys(demoData).sort((a,b) => {
+    const [da,ma,ya] = a.split(".").map(Number);
+    const [db,mb,yb] = b.split(".").map(Number);
+    return new Date(ya,ma-1,da) - new Date(yb,mb-1,db);
+  });
+  for (const d of dates) {
+    const day = demoData[d];
+    const down = totalDowntime(day);
+    totalDown += down;
+    totalDelay += day.start_delay || 0;
+    totalStops += (day.stops || []).length;
+    workDays++;
+    const eff = efficiency(down);
+    const flag = eff >= 95 ? "🟢" : eff >= 88 ? "🟡" : "🔴";
+    s += `${flag} *${d}* — ${fmtMins(down)} простоя, ${eff}%\n`;
+    const delayStr = day.start_delay > 0 ? ` (+${fmtMins(day.start_delay)})` : "";
+    s += `   Старт ${day.start}${delayStr} · ${(day.stops||[]).length} остановок\n`;
+  }
+  const avg = Math.round(totalDown / Math.max(workDays, 1));
+  s += `\n─────────────────\n`;
+  s += `⏱ Итого простой: *${fmtMins(totalDown)}*\n`;
+  s += `📉 Среднее в день: *${fmtMins(avg)}*\n`;
+  s += `⏰ Опозданий: *${fmtMins(totalDelay)}*\n`;
+  s += `🛑 Остановок: *${totalStops}*`;
+  return s;
+}
+
+function formatMonth() {
+  let totalDown = 0, workDays = 0;
+  const byType = { lunch:0, tech:0, paint:0, other:0 };
+  for (const d in demoData) {
+    workDays++;
+    totalDown += totalDowntime(demoData[d]);
+    for (const st of demoData[d].stops || []) {
+      if (st.type in byType) byType[st.type] += stopDowntime(st);
+    }
+  }
+  const eff = efficiency(Math.round(totalDown / Math.max(workDays,1)));
+  let s = "📈 *Статистика за месяц*\n\n";
+  s += `📅 Рабочих дней: ${workDays}\n`;
+  s += `⏱ Итого простой: *${fmtMins(totalDown)}*\n`;
+  s += `📊 Средняя эффективность: *${eff}%*\n\n`;
+  s += `*По причинам:*\n`;
+  s += `🍽 Обеды (сверх нормы): ${fmtMins(byType.lunch)}\n`;
+  s += `🔧 Поломки: ${fmtMins(byType.tech)}\n`;
+  s += `🎨 Смена краски: ${fmtMins(byType.paint)}\n`;
+  s += `📝 Другое: ${fmtMins(byType.other)}\n\n`;
+  s += `_Демо: данные за 5 рабочих дней. На реальном заводе бот считает за любой период._`;
+  return s;
+}
+
+// ──────────────────────────────────────────────
+// Обработка нажатий
+// ──────────────────────────────────────────────
+function handle(btn) {
+  if (btn === "❌ Отмена") {
+    addMsg(btn, "user");
+    addMsg("Отменено.");
+    mainMenu();
+    return;
+  }
+  addMsg(btn, "user");
+
+  // Главное меню
+  if (state === "idle") {
+    if (btn === "📅 Сегодня") {
+      addMsg(formatDay(TODAY, demoData[TODAY]));
+      return;
+    }
+    if (btn === "📊 За неделю") {
+      addMsg(formatWeek());
+      return;
+    }
+    if (btn === "📈 За месяц") {
+      addMsg(formatMonth());
+      return;
+    }
+    if (btn === "📆 Выбрать дату") {
+      addMsg(`Введи дату в формате *ДД.ММ.ГГГГ*\n_В демо доступны: 11.05.2026 — 15.05.2026_`);
+      setKeyboard([
+        { text:"11.05.2026" }, { text:"12.05.2026" },
+        { text:"13.05.2026" }, { text:"14.05.2026" },
+        { text:"❌ Отмена", cls:"cancel", full:true },
+      ]);
+      state = "pick_date";
+      return;
+    }
+    if (btn === "▶️ Запустить линию") {
+      addMsg(`▶️ *Запуск линии*\nВремя: *${NOW}*\n\nЛиния запущена вовремя или была задержка?`);
+      setKeyboard([
+        { text:"✅ Нет, всё нормально", cls:"green", full:true },
+        { text:"⚠️ Была задержка", full:true },
+        { text:"❌ Отмена", cls:"cancel", full:true },
+      ], 1);
+      state = "start_ontime";
+      return;
+    }
+    if (btn === "⏸ Остановить линию") {
+      addMsg(`⏸ *Остановка линии*\nВремя: *${NOW}*\n\nВыбери причину:`);
+      setKeyboard([
+        { text:"🍽 Обед" },         { text:"🔧 Поломка" },
+        { text:"🎨 Смена краски" }, { text:"📝 Другое" },
+        { text:"🔚 Конец работы", full:true },
+        { text:"❌ Отмена", cls:"cancel", full:true },
+      ]);
+      state = "stop_choose";
+      return;
+    }
+  }
+
+  // Выбор даты
+  if (state === "pick_date") {
+    if (demoData[btn]) {
+      addMsg(formatDay(btn, demoData[btn]));
+    } else {
+      addMsg(`📅 *${btn}*\n\n📭 Данных за этот день нет.`);
+    }
+    mainMenu();
+    return;
+  }
+
+  // Запуск
+  if (state === "start_ontime") {
+    if (btn === "✅ Нет, всё нормально") {
+      addMsg(`✅ *Линия запущена!*\n▶️ Старт: ${NOW}\n🟢 Вовремя · Сохранено 💾`);
+      mainMenu();
+    } else if (btn === "⚠️ Была задержка") {
+      addMsg(`⚠️ Напиши причину задержки.\n_В демо выбери одну из готовых:_`);
+      setKeyboard([
+        { text:"Долго грелся компрессор", full:true },
+        { text:"Электрик задержался", full:true },
+        { text:"Привезли не ту краску", full:true },
+        { text:"❌ Отмена", cls:"cancel", full:true },
+      ], 1);
+      state = "start_reason";
+    }
+    return;
+  }
+  if (state === "start_reason") {
+    addMsg(`✅ *Линия запущена!*\n▶️ Старт: ${NOW}\n⚠️ Задержка: +23 мин\n📝 ${btn}\n💾 Сохранено`);
+    mainMenu();
+    return;
+  }
+
+  // Остановка
+  if (state === "stop_choose") {
+    if (btn === "🍽 Обед") {
+      addMsg(`🍽 *Обед начат — ${NOW}*\nНорма: 30 минут\n\nНажми когда вернулись:`);
+      setKeyboard([
+        { text:"▶️ Запускаем линию (вернулись через 28 мин)", cls:"green", full:true },
+        { text:"▶️ Запускаем линию (затянули до 42 мин)", full:true },
+        { text:"❌ Отмена", cls:"cancel", full:true },
+      ], 1);
+      state = "lunch_active";
+      return;
+    }
+    if (btn === "🔧 Поломка") {
+      addMsg(`🔧 *Поломка*\n\nОпиши что случилось.\n_В демо выбери одну:_`);
+      setKeyboard([
+        { text:"Засор форсунки", full:true },
+        { text:"Конвейер заклинило", full:true },
+        { text:"Компрессор отключился", full:true },
+        { text:"❌ Отмена", cls:"cancel", full:true },
+      ], 1);
+      state = "tech_reason";
+      return;
+    }
+    if (btn === "🎨 Смена краски") {
+      addMsg(`🎨 *Смена краски*\n\nДобавь комментарий (необязательно):`);
+      setKeyboard([
+        { text:"С чёрной на белую", full:true },
+        { text:"⏭ Пропустить", full:true },
+        { text:"❌ Отмена", cls:"cancel", full:true },
+      ], 1);
+      state = "paint_reason";
+      return;
+    }
+    if (btn === "📝 Другое") {
+      addMsg(`📝 *Другое*\n\nОпиши причину (необязательно):`);
+      setKeyboard([
+        { text:"Перекур бригады", full:true },
+        { text:"Доставка материалов", full:true },
+        { text:"⏭ Пропустить", full:true },
+        { text:"❌ Отмена", cls:"cancel", full:true },
+      ], 1);
+      state = "other_reason";
+      return;
+    }
+    if (btn === "🔚 Конец работы") {
+      addMsg(`🔚 *Конец рабочего дня*\nВремя: *${NOW}*\n\nЕсть комментарий?`);
+      setKeyboard([
+        { text:"⏭ Пропустить", full:true },
+        { text:"Смена прошла без проблем", full:true },
+        { text:"❌ Отмена", cls:"cancel", full:true },
+      ], 1);
+      state = "end_note";
+      return;
+    }
+  }
+
+  if (state === "lunch_active") {
+    if (btn.includes("28 мин")) {
+      addMsg(`✅ *Линия запущена!*\n\n🍽 Обед: 12:00 → 12:28\n⏱ 28 мин\n🟢 В норме · 💾 Сохранено`);
+      mainMenu();
+    } else {
+      addMsg(`⚠️ *Обед 42 мин* — норма превышена на 12 мин\n\nПочему обед затянулся?`);
+      setKeyboard([
+        { text:"Обсуждали новый заказ", full:true },
+        { text:"Привезли еду с задержкой", full:true },
+        { text:"⏭ Пропустить", full:true },
+      ], 1);
+      state = "lunch_overrun";
+    }
+    return;
+  }
+  if (state === "lunch_overrun") {
+    const reason = btn === "⏭ Пропустить" ? "" : btn;
+    addMsg(`✅ *Линия запущена!*\n\n🍽 Обед: 12:00 → 12:42 (42 мин)\n🔴 Простой: 12 мин (сверх нормы)\n${reason ? "📝 " + reason + "\n" : ""}💾 Сохранено`);
+    mainMenu();
+    return;
+  }
+
+  if (state === "tech_reason") {
+    addMsg(`🔧 *Поломка зафиксирована*\nНачало: ${NOW}\n📝 ${btn}\n\nНажми когда запускаем линию:`);
+    setKeyboard([
+      { text:"▶️ Запускаем линию (через 35 мин)", cls:"green", full:true },
+      { text:"❌ Отмена", cls:"cancel", full:true },
+    ], 1);
+    stopCtx = { type:"tech", reason: btn };
+    state = "stop_active";
+    return;
+  }
+  if (state === "paint_reason") {
+    const reason = btn === "⏭ Пропустить" ? "" : btn;
+    addMsg(`🎨 *Смена краски зафиксирована*\nНачало: ${NOW}\n${reason ? "📝 " + reason + "\n" : ""}\nНажми когда запускаем линию:`);
+    setKeyboard([
+      { text:"▶️ Запускаем линию (через 12 мин)", cls:"green", full:true },
+      { text:"❌ Отмена", cls:"cancel", full:true },
+    ], 1);
+    stopCtx = { type:"paint", reason };
+    state = "stop_active";
+    return;
+  }
+  if (state === "other_reason") {
+    const reason = btn === "⏭ Пропустить" ? "" : btn;
+    addMsg(`📝 *Другое зафиксировано*\nНачало: ${NOW}\n${reason ? "📝 " + reason + "\n" : ""}\nНажми когда запускаем линию:`);
+    setKeyboard([
+      { text:"▶️ Запускаем линию (через 18 мин)", cls:"green", full:true },
+      { text:"❌ Отмена", cls:"cancel", full:true },
+    ], 1);
+    stopCtx = { type:"other", reason };
+    state = "stop_active";
+    return;
+  }
+  if (state === "stop_active") {
+    const t = stopCtx.type;
+    const mins = t === "tech" ? 35 : t === "paint" ? 12 : 18;
+    addMsg(`✅ *Линия запущена!*\n\n${typeIcon(t)} ${typeLabel(t)}: ${NOW} → 14:${(parseInt(NOW.split(":")[1]) + mins) % 60 || "00"}\n⏱ ${fmtMins(mins)}\n${stopCtx.reason ? "📝 " + stopCtx.reason + "\n" : ""}💾 Сохранено`);
+    mainMenu();
+    return;
+  }
+
+  if (state === "end_note") {
+    const note = btn === "⏭ Пропустить" ? "" : btn;
+    addMsg(`🔚 *Рабочий день завершён!*\nВремя: ${NOW}\n${note ? "📝 " + note + "\n" : ""}💾 Сохранено`);
+    mainMenu();
+    return;
+  }
+}
+
+// ──────────────────────────────────────────────
+// Старт
+// ──────────────────────────────────────────────
+addMsg("🏭 *Журнал покрасочной линии*\n\nФиксирую запуски, остановки и считаю минуты простоя.\nВыбери действие:");
+mainMenu();
+</script>
+
+</body>
+</html>
