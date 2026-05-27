@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="ru">
+<html lang="en">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
@@ -115,10 +115,10 @@ html,body{height:100%;background:var(--bg);color:var(--text);font-family:'JetBra
   <div class="hdr">
     <div class="hdr-left">
       <h1>Crypto Trading</h1>
-      <p>Виртуальная биржа · старт $10,000</p>
+      <p>Virtual exchange · start $10,000</p>
     </div>
     <div class="hdr-right">
-      <div class="bal-lbl">Баланс</div>
+      <div class="bal-lbl">Balance</div>
       <div class="bal" id="bal">$10,000</div>
       <div class="pnl" id="pnl" style="color:var(--green2)">+$0.00 (0.00%)</div>
     </div>
@@ -137,13 +137,13 @@ html,body{height:100%;background:var(--bg);color:var(--text);font-family:'JetBra
   </div>
 
   <div class="trade-box">
-    <div class="trade-hdr" id="trade-hdr">Торговля · BTC</div>
+    <div class="trade-hdr" id="trade-hdr">Trading · BTC</div>
     <div class="mode-tabs">
-      <button class="mode-tab long-active" id="tab-long" onclick="setMode('long')">▲ ЛОНГ</button>
-      <button class="mode-tab" id="tab-short" onclick="setMode('short')">▼ ШОРТ</button>
+      <button class="mode-tab long-active" id="tab-long" onclick="setMode('long')">▲ LONG</button>
+      <button class="mode-tab" id="tab-short" onclick="setMode('short')">▼ SHORT</button>
     </div>
     <div class="inp-row">
-      <span class="inp-lbl">Сумма $</span>
+      <span class="inp-lbl">Amount $</span>
       <input class="inp" id="amt" type="number" value="100" min="1" inputmode="numeric">
     </div>
     <div class="qrow">
@@ -151,32 +151,32 @@ html,body{height:100%;background:var(--bg);color:var(--text);font-family:'JetBra
       <button class="qb" onclick="sa(500)">$500</button>
       <button class="qb" onclick="sa(1000)">$1K</button>
       <button class="qb" onclick="sa(2500)">$2.5K</button>
-      <button class="qb" onclick="sa(-1)">Всё</button>
+      <button class="qb" onclick="sa(-1)">All</button>
     </div>
     <div class="trade-btns" id="trade-btns">
-      <button class="btn-buy" onclick="trade('buy')">▲ КУПИТЬ</button>
-      <button class="btn-sell" onclick="trade('sell')">▼ ПРОДАТЬ</button>
+      <button class="btn-buy" onclick="trade('buy')">▲ BUY</button>
+      <button class="btn-sell" onclick="trade('sell')">▼ SELL</button>
     </div>
   </div>
 
   <div class="short-pos" id="short-pos">
-    <div class="short-pos-title">Открытые шорты</div>
+    <div class="short-pos-title">Open shorts</div>
     <div id="short-list"></div>
   </div>
 
   <div class="port-box">
-    <div class="section-lbl">Портфель</div>
+    <div class="section-lbl">Portfolio</div>
     <div id="port"></div>
   </div>
 
   <div class="lb-box">
-    <div class="section-lbl">Таблица лидеров</div>
+    <div class="section-lbl">Leaderboard</div>
     <div id="lb"></div>
   </div>
 
   <div class="log-box">
-    <div class="section-lbl">История сделок</div>
-    <div id="log"><div class="litem" style="color:var(--sub2)">Нет сделок — начни торговать!</div></div>
+    <div class="section-lbl">Trade history</div>
+    <div id="log"><div class="litem" style="color:var(--sub2)">No trades — start trading!</div></div>
   </div>
 </div>
 
@@ -294,7 +294,7 @@ function rCoins(){
       <div class="coin-name">${c.name}</div>
       <div class="coin-price">${c.p?fp(c.p):'...'}</div>
       <div class="coin-chg" style="color:${col}">${chg>=0?'+':''}${chg.toFixed(2)}% 24h</div>
-      ${owned>0.000001?`<div class="coin-hold">${owned.toFixed(owned>1?2:5)} монет</div>`:''}
+      ${owned>0.000001?`<div class="coin-hold">${owned.toFixed(owned>1?2:5)} coins</div>`:''}
     </div>`;
   }).join('');
 }
@@ -303,7 +303,7 @@ function rPort(){
   let html='';
   COINS.forEach(c=>{
     if(hold[c.id]>0.000001){
-      html+=`<div class="prow"><div><div class="prow-name">${c.id}</div><div class="prow-sub">${hold[c.id].toFixed(hold[c.id]>1?3:5)} монет</div></div><div style="text-align:right"><div style="color:#fff;font-weight:700">${fd(hold[c.id]*c.p)}</div></div></div>`;
+      html+=`<div class="prow"><div><div class="prow-name">${c.id}</div><div class="prow-sub">${hold[c.id].toFixed(hold[c.id]>1?3:5)} coins</div></div><div style="text-align:right"><div style="color:#fff;font-weight:700">${fd(hold[c.id]*c.p)}</div></div></div>`;
     }
   });
   html+=`<div class="prow"><div class="prow-name">USD</div><div style="color:var(--accent2);font-weight:700">${fd(cash)}</div></div>`;
@@ -328,7 +328,7 @@ function rTicker(){
 
 function rLeaders(){
   const myVal=Math.round(tv());
-  let all=[...LEADERS,{name:tg?.initDataUnsafe?.user?.first_name||'Ты',val:myVal,me:true}];
+  let all=[...LEADERS,{name:tg?.initDataUnsafe?.user?.first_name||'You',val:myVal,me:true}];
   all.sort((a,b)=>b.val-a.val);
   const medals=['🥇','🥈','🥉'];
   document.getElementById('lb').innerHTML=all.slice(0,6).map((p,i)=>{
@@ -339,13 +339,13 @@ function rLeaders(){
 
 function rLog(){
   const el=document.getElementById('log');
-  if(!logs.length){el.innerHTML='<div class="litem" style="color:var(--sub2)">Нет сделок — начни торговать!</div>';return;}
+  if(!logs.length){el.innerHTML='<div class="litem" style="color:var(--sub2)">No trades — start trading!</div>';return;}
   el.innerHTML=logs.slice(-10).reverse().map(l=>`<div class="litem">${l}</div>`).join('');
 }
 
 function rAll(){rCoins();drawChart();rPort();rBal();rTicker();rLeaders();rLog();rShorts();}
 
-function selC(i){sel=i;document.getElementById('trade-hdr').textContent=`Торговля · ${COINS[i].id}`;rAll();}
+function selC(i){sel=i;document.getElementById('trade-hdr').textContent=`Trading · ${COINS[i].id}`;rAll();}
 function sa(n){document.getElementById('amt').value=n<0?Math.floor(cash):n;}
 
 function showToast(msg,ok){
@@ -365,11 +365,11 @@ function setMode(mode){
   if(mode==='long'){
     tl.className='mode-tab long-active';
     ts.className='mode-tab';
-    tb.innerHTML='<button class="btn-buy" onclick="trade(\'buy\')">▲ КУПИТЬ</button><button class="btn-sell" onclick="trade(\'sell\')">▼ ПРОДАТЬ</button>';
+    tb.innerHTML='<button class="btn-buy" onclick="trade(\'buy\')">▲ BUY</button><button class="btn-sell" onclick="trade(\'sell\')">▼ SELL</button>';
   } else {
     tl.className='mode-tab';
     ts.className='mode-tab short-active';
-    tb.innerHTML='<button class="btn-sell" style="grid-column:1/-1" onclick="trade(\'short\')">▼ ОТКРЫТЬ ШОРТ</button>';
+    tb.innerHTML='<button class="btn-sell" style="grid-column:1/-1" onclick="trade(\'short\')">▼ OPEN SHORT</button>';
   }
 }
 
@@ -384,11 +384,11 @@ function rShorts(){
     const pnlPct=(pnl/s.collateral*100);
     const col=pnl>=0?'var(--green2)':'var(--red2)';
     html+=`<div style="background:var(--bg3);border-radius:8px;padding:8px;margin-bottom:8px">
-      <div class="short-pos-row"><span style="color:#fff;font-weight:700">${c.id} ШОРТ</span><span style="color:${col};font-weight:700">${pnl>=0?'+':''}${fd(pnl)} (${pnlPct>=0?'+':''}${pnlPct.toFixed(2)}%)</span></div>
-      <div class="short-pos-row"><span style="color:var(--sub)">Вход</span><span>${fp(s.entryPrice)}</span></div>
-      <div class="short-pos-row"><span style="color:var(--sub)">Текущая</span><span>${fp(c.p)}</span></div>
-      <div class="short-pos-row"><span style="color:var(--sub)">Размер</span><span>${fd(s.collateral)}</span></div>
-      <button class="btn-close-short" onclick="closeShort('${c.id}')">✕ ЗАКРЫТЬ ШОРТ ${c.id}</button>
+      <div class="short-pos-row"><span style="color:#fff;font-weight:700">${c.id} SHORT</span><span style="color:${col};font-weight:700">${pnl>=0?'+':''}${fd(pnl)} (${pnlPct>=0?'+':''}${pnlPct.toFixed(2)}%)</span></div>
+      <div class="short-pos-row"><span style="color:var(--sub)">Entry</span><span>${fp(s.entryPrice)}</span></div>
+      <div class="short-pos-row"><span style="color:var(--sub)">Current</span><span>${fp(c.p)}</span></div>
+      <div class="short-pos-row"><span style="color:var(--sub)">Size</span><span>${fd(s.collateral)}</span></div>
+      <button class="btn-close-short" onclick="closeShort('${c.id}')">✕ CLOSE SHORT ${c.id}</button>
     </div>`;
   });
   const el=document.getElementById('short-pos');
@@ -403,12 +403,12 @@ function closeShort(id){
   if(!s||!c.p) return;
   const pnl=(s.entryPrice-c.p)*s.size;
   const returned=s.collateral+pnl;
-  if(returned<0){showToast(`${id} ликвидирован! -${fd(s.collateral)}`,false);}
+  if(returned<0){showToast(`${id} liquidated! -${fd(s.collateral)}`,false);}
   else{
     cash+=returned;
-    const now=new Date().toLocaleTimeString('ru',{hour:'2-digit',minute:'2-digit'});
-    logs.push(`${now} · <span class="sell-tag">ЗАКРЫЛ ШОРТ</span> <span class="coin-tag">${id}</span> ${pnl>=0?'+':''}${fd(pnl)} @ ${fp(c.p)}`);
-    showToast(`Шорт ${id} закрыт ${pnl>=0?'+':''}${fd(pnl)}`,pnl>=0);
+    const now=new Date().toLocaleTimeString('en-US',{hour:'2-digit',minute:'2-digit',hour12:false});
+    logs.push(`${now} · <span class="sell-tag">CLOSED SHORT</span> <span class="coin-tag">${id}</span> ${pnl>=0?'+':''}${fd(pnl)} @ ${fp(c.p)}`);
+    showToast(`Short ${id} closed ${pnl>=0?'+':''}${fd(pnl)}`,pnl>=0);
   }
   shorts[id]=null;
   rAll();
@@ -416,30 +416,30 @@ function closeShort(id){
 
 function trade(type){
   const c=COINS[sel];
-  if(!c.p){showToast('Ждём цены Binance...',false);return;}
+  if(!c.p){showToast('Waiting for Binance prices...',false);return;}
   const amt=parseFloat(document.getElementById('amt').value)||0;
-  if(amt<=0){showToast('Введите сумму!',false);return;}
-  const now=new Date().toLocaleTimeString('ru',{hour:'2-digit',minute:'2-digit'});
+  if(amt<=0){showToast('Enter an amount!',false);return;}
+  const now=new Date().toLocaleTimeString('en-US',{hour:'2-digit',minute:'2-digit',hour12:false});
 
   if(type==='short'){
-    if(amt>cash+0.01){showToast('Недостаточно USD!',false);return;}
-    if(shorts[c.id]){showToast(`Шорт ${c.id} уже открыт!`,false);return;}
+    if(amt>cash+0.01){showToast('Not enough USD!',false);return;}
+    if(shorts[c.id]){showToast(`Short ${c.id} already open!`,false);return;}
     const size=amt/c.p;
     cash-=amt;
     shorts[c.id]={size,entryPrice:c.p,collateral:amt};
-    logs.push(`${now} · <span class="sell-tag">ШОРТ</span> <span class="coin-tag">${c.id}</span> ${fd(amt)} @ ${fp(c.p)}`);
-    showToast(`Шорт ${c.id} открыт на ${fd(amt)}`,true);
+    logs.push(`${now} · <span class="sell-tag">SHORT</span> <span class="coin-tag">${c.id}</span> ${fd(amt)} @ ${fp(c.p)}`);
+    showToast(`Short ${c.id} opened for ${fd(amt)}`,true);
   } else if(type==='buy'){
-    if(amt>cash+0.01){showToast('Недостаточно USD!',false);return;}
+    if(amt>cash+0.01){showToast('Not enough USD!',false);return;}
     const coins=amt/c.p;cash-=amt;hold[c.id]+=coins;
-    logs.push(`${now} · <span class="buy-tag">КУПИЛ</span> <span class="coin-tag">${c.id}</span> на ${fd(amt)} @ ${fp(c.p)}`);
-    showToast(`Куплено ${coins.toFixed(coins>1?2:5)} ${c.id}`,true);
+    logs.push(`${now} · <span class="buy-tag">BOUGHT</span> <span class="coin-tag">${c.id}</span> for ${fd(amt)} @ ${fp(c.p)}`);
+    showToast(`Bought ${coins.toFixed(coins>1?2:5)} ${c.id}`,true);
   } else {
     const coins=amt/c.p;
-    if(coins>hold[c.id]+0.000001){showToast('Недостаточно монет!',false);return;}
+    if(coins>hold[c.id]+0.000001){showToast('Not enough coins!',false);return;}
     hold[c.id]-=coins;if(hold[c.id]<0.000001)hold[c.id]=0;cash+=amt;
-    logs.push(`${now} · <span class="sell-tag">ПРОДАЛ</span> <span class="coin-tag">${c.id}</span> на ${fd(amt)} @ ${fp(c.p)}`);
-    showToast(`Продано на ${fd(amt)}`,true);
+    logs.push(`${now} · <span class="sell-tag">SOLD</span> <span class="coin-tag">${c.id}</span> for ${fd(amt)} @ ${fp(c.p)}`);
+    showToast(`Sold for ${fd(amt)}`,true);
   }
   rAll();
 }
