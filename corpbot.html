@@ -1,9 +1,9 @@
 <!DOCTYPE html>
-<html lang="ru">
+<html lang="en">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
-<title>Корпоративный бот — Демо</title>
+<title>Corporate Bot — Demo</title>
 <link href="https://fonts.googleapis.com/css2?family=Syne:wght@600;700;800&family=Manrope:wght@400;500;600&display=swap" rel="stylesheet">
 <style>
 *{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
@@ -80,17 +80,17 @@ html,body{height:100%;background:var(--bg);font-family:'Manrope',sans-serif;colo
   <div class="bot-avatar">🏢</div>
   <div class="bot-info">
     <div class="bot-name">CorpBot Pro</div>
-    <div class="bot-status">онлайн</div>
+    <div class="bot-status">online</div>
   </div>
   <span class="menu-btn">⋮</span>
 </div>
 
 <div class="chat" id="chat">
-  <div class="divider">сегодня</div>
+  <div class="divider">today</div>
 </div>
 
 <div class="bottom-bar">
-  <input class="msg-input" id="msgInput" placeholder="Сообщение..." onkeydown="if(event.key==='Enter')sendUserMsg()">
+  <input class="msg-input" id="msgInput" placeholder="Message..." onkeydown="if(event.key==='Enter')sendUserMsg()">
   <button class="send-btn" onclick="sendUserMsg()">➤</button>
 </div>
 
@@ -100,51 +100,51 @@ let step = 'start';
 
 const scenarios = {
   start: {
-    bot: ['👋 Добро пожаловать в <b>CorpBot Pro</b>!\n\nЯ помогу вам управлять клиентами, заявками и получать уведомления. Выберите раздел:'],
-    keyboard: [['👥 Клиенты','📋 Заявки'],['📊 Статистика','🔔 Уведомления']]
+    bot: ['👋 Welcome to <b>CorpBot Pro</b>!\n\nI help you manage clients, orders and notifications. Pick a section:'],
+    keyboard: [['👥 Clients','📋 Orders'],['📊 Stats','🔔 Notifications']]
   },
   clients: {
-    bot: ['🔍 <b>Поиск клиента</b>\n\nВведите имя, телефон или ID клиента:'],
-    keyboard: [['🔎 Найти по ID: 1042'],['⬅️ Главное меню']]
+    bot: ['🔍 <b>Find a client</b>\n\nEnter name, phone or client ID:'],
+    keyboard: [['🔎 Find by ID: 1042'],['⬅️ Main menu']]
   },
   client_found: {
-    bot: ['✅ <b>Клиент найден</b>'],
+    bot: ['✅ <b>Client found</b>'],
     card: {rows:[
-      {label:'Имя',val:'Александр Петров'},
-      {label:'Телефон',val:'+371 2X XXX XXX'},
-      {label:'Email',val:'a.petrov@mail.com'},
-      {label:'Статус',val:'Активный',badge:'s-green'},
-      {label:'Договор',val:'№ 2024-1042'},
-      {label:'Сумма',val:'4 200 €'},
+      {label:'Name',val:'Alexander Peters'},
+      {label:'Phone',val:'+371 2X XXX XXX'},
+      {label:'Email',val:'a.peters@mail.com'},
+      {label:'Status',val:'Active',badge:'s-green'},
+      {label:'Contract',val:'No. 2024-1042'},
+      {label:'Amount',val:'€ 4 200'},
     ]},
-    keyboard:[['📋 Его заявки','✏️ Редактировать'],['⬅️ Назад']]
+    keyboard:[['📋 His orders','✏️ Edit'],['⬅️ Back']]
   },
   orders: {
-    bot: ['📋 <b>Активные заявки</b>\n\nВсего открытых: 3'],
+    bot: ['📋 <b>Active orders</b>\n\nOpen: 3'],
     orders: true,
-    keyboard:[['➕ Создать заявку','🔍 Поиск'],['⬅️ Главное меню']]
+    keyboard:[['➕ New order','🔍 Search'],['⬅️ Main menu']]
   },
   new_order: {
-    bot: ['➕ <b>Новая заявка</b>\n\nЗаполните форму:'],
+    bot: ['➕ <b>New order</b>\n\nFill the form:'],
     form: true,
-    keyboard:[['✅ Создать заявку'],['⬅️ Отмена']]
+    keyboard:[['✅ Create order'],['⬅️ Cancel']]
   },
   order_created: {
-    bot: ['✅ <b>Заявка #4829 создана!</b>\n\nНазначен исполнитель. Клиент получил уведомление на email.'],
-    keyboard:[['📋 Все заявки','⬅️ Главное меню']]
+    bot: ['✅ <b>Order #4829 created!</b>\n\nAssigned to an agent. Client got an email notification.'],
+    keyboard:[['📋 All orders','⬅️ Main menu']]
   },
   stats: {
-    bot: ['📊 <b>Статистика за месяц</b>'],
+    bot: ['📊 <b>Monthly stats</b>'],
     stats: true,
-    keyboard:[['📅 За неделю','📅 За год'],['⬅️ Главное меню']]
+    keyboard:[['📅 This week','📅 This year'],['⬅️ Main menu']]
   },
   notifications: {
-    bot: ['🔔 <b>Уведомления</b>\n\nВыберите тип:'],
-    keyboard:[['📨 Отправить клиенту','📢 Всем клиентам'],['⬅️ Главное меню']]
+    bot: ['🔔 <b>Notifications</b>\n\nPick type:'],
+    keyboard:[['📨 Send to client','📢 All clients'],['⬅️ Main menu']]
   },
   notify_sent: {
-    bot: ['📨 <b>Уведомление отправлено!</b>\n\nКлиент получит сообщение в Telegram и на email. Статус доставки появится через минуту.'],
-    keyboard:[['🔔 Ещё уведомление','⬅️ Главное меню']]
+    bot: ['📨 <b>Notification sent!</b>\n\nClient will receive it in Telegram and by email. Delivery status appears in a minute.'],
+    keyboard:[['🔔 Another notification','⬅️ Main menu']]
   }
 };
 
@@ -177,9 +177,9 @@ function addCard(rows){
 
 function addOrders(){
   const orders = [
-    {id:'#4826',client:'Мария К.',desc:'Техподдержка',status:'В работе',badge:'s-orange'},
-    {id:'#4824',client:'Игорь С.',desc:'Консультация',status:'Ожидает',badge:'s-blue'},
-    {id:'#4821',client:'Анна П.',desc:'Доп. услуги',status:'Срочно',badge:'s-red'},
+    {id:'#4826',client:'Maria K.',desc:'Tech support',status:'In progress',badge:'s-orange'},
+    {id:'#4824',client:'Igor S.',desc:'Consultation',status:'Pending',badge:'s-blue'},
+    {id:'#4821',client:'Anna P.',desc:'Add-on services',status:'Urgent',badge:'s-red'},
   ];
   const wrap = document.createElement('div');
   wrap.className='msg-bot';
@@ -193,7 +193,7 @@ function addStats(){
   const wrap = document.createElement('div');
   wrap.className='msg-bot';
   wrap.style.marginTop='-4px';
-  wrap.innerHTML=`<div style="width:28px;flex-shrink:0"></div><div style="flex:1"><div class="stats-row"><div class="stat-card"><div class="stat-num" style="color:#64b5f6">138</div><div class="stat-lbl">Клиентов</div></div><div class="stat-card"><div class="stat-num" style="color:#81c784">24</div><div class="stat-lbl">Заявок</div></div><div class="stat-card"><div class="stat-num" style="color:#ffb74d">18.4k</div><div class="stat-lbl">Выручка €</div></div></div><div class="info-card" style="margin-top:8px"><div class="info-row"><span class="info-label">Новых клиентов</span><span class="info-val" style="color:#81c784">+12</span></div><div class="info-row"><span class="info-label">Закрытых заявок</span><span class="info-val">19 из 24</span></div><div class="info-row"><span class="info-label">Средний чек</span><span class="info-val">766 €</span></div><div class="info-row"><span class="info-label">NPS</span><span class="info-val" style="color:#81c784">4.8 / 5.0</span></div></div></div>`;
+  wrap.innerHTML=`<div style="width:28px;flex-shrink:0"></div><div style="flex:1"><div class="stats-row"><div class="stat-card"><div class="stat-num" style="color:#64b5f6">138</div><div class="stat-lbl">Clients</div></div><div class="stat-card"><div class="stat-num" style="color:#81c784">24</div><div class="stat-lbl">Orders</div></div><div class="stat-card"><div class="stat-num" style="color:#ffb74d">18.4k</div><div class="stat-lbl">Revenue €</div></div></div><div class="info-card" style="margin-top:8px"><div class="info-row"><span class="info-label">New clients</span><span class="info-val" style="color:#81c784">+12</span></div><div class="info-row"><span class="info-label">Closed orders</span><span class="info-val">19 of 24</span></div><div class="info-row"><span class="info-label">Average ticket</span><span class="info-val">€ 766</span></div><div class="info-row"><span class="info-label">NPS</span><span class="info-val" style="color:#81c784">4.8 / 5.0</span></div></div></div>`;
   chat.appendChild(wrap);
   scrollBot();
 }
@@ -202,7 +202,7 @@ function addForm(){
   const wrap = document.createElement('div');
   wrap.className='msg-bot';
   wrap.style.marginTop='-4px';
-  wrap.innerHTML=`<div style="width:28px;flex-shrink:0"></div><div class="info-card" style="flex:1"><div class="info-row"><span class="info-label">Клиент</span><span class="info-val">Александр Петров</span></div><div class="info-row"><span class="info-label">Тип</span><span class="info-val">Техподдержка</span></div><div class="info-row"><span class="info-label">Приоритет</span><span class="info-val"><span class="status-badge s-orange">Средний</span></span></div><div class="info-row"><span class="info-label">Дата</span><span class="info-val">Сегодня</span></div></div>`;
+  wrap.innerHTML=`<div style="width:28px;flex-shrink:0"></div><div class="info-card" style="flex:1"><div class="info-row"><span class="info-label">Client</span><span class="info-val">Alexander Peters</span></div><div class="info-row"><span class="info-label">Type</span><span class="info-val">Tech support</span></div><div class="info-row"><span class="info-label">Priority</span><span class="info-val"><span class="status-badge s-orange">Medium</span></span></div><div class="info-row"><span class="info-label">Date</span><span class="info-val">Today</span></div></div>`;
   chat.appendChild(wrap);
   scrollBot();
 }
@@ -240,13 +240,13 @@ async function handleBtn(label){
   addUserMsg(label);
   await new Promise(r=>setTimeout(r,300));
   let sc;
-  if(label.includes('Клиент')) sc=scenarios.clients;
-  else if(label.includes('Найти по ID')) sc=scenarios.client_found;
-  else if(label.includes('Заявк') || label.includes('заявк')) sc=scenarios.orders;
-  else if(label.includes('Создать заявку')) sc = step==='orders_shown' ? scenarios.new_order : scenarios.order_created;
-  else if(label.includes('Статист')) sc=scenarios.stats;
-  else if(label.includes('Уведомл')) sc=scenarios.notifications;
-  else if(label.includes('Отправить') || label.includes('клиенту') || label.includes('Всем')) sc=scenarios.notify_sent;
+  if(label.includes('Client')) sc=scenarios.clients;
+  else if(label.includes('Find by ID')) sc=scenarios.client_found;
+  else if(label.includes('Order') || label.includes('order')) sc=scenarios.orders;
+  else if(label.includes('New order')) sc = step==='orders_shown' ? scenarios.new_order : scenarios.order_created;
+  else if(label.includes('Stat')) sc=scenarios.stats;
+  else if(label.includes('Notification')) sc=scenarios.notifications;
+  else if(label.includes('Send') || label.includes('client') || label.includes('All')) sc=scenarios.notify_sent;
   else sc=scenarios.start;
 
   for(const msg of sc.bot){
@@ -265,7 +265,7 @@ function sendUserMsg(){
   addUserMsg(input.value);
   input.value='';
   setTimeout(async()=>{
-    await addBotMsg('Пожалуйста, используйте кнопки меню для навигации 👇');
+    await addBotMsg('Please use the menu buttons to navigate 👇');
   }, 800);
 }
 

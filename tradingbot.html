@@ -1,9 +1,9 @@
 <!DOCTYPE html>
-<html lang="ru">
+<html lang="en">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
-<title>Трейдинг-бот — Демо</title>
+<title>Trading Bot — Demo</title>
 <link href="https://fonts.googleapis.com/css2?family=Syne:wght@600;700;800&family=Manrope:wght@400;500;600&display=swap" rel="stylesheet">
 <style>
 *{margin:0;padding:0;box-sizing:border-box}
@@ -95,30 +95,30 @@ html,body{background:var(--bg);font-family:'Manrope',sans-serif;color:var(--text
   <div class="bot-avatar">📈</div>
   <div>
     <div class="bot-name">Crypto AI Signals</div>
-    <div class="bot-status">бот активен · мониторинг рынка</div>
+    <div class="bot-status">bot active · monitoring market</div>
   </div>
 </div>
 
 <div class="tabs">
-  <div class="tab active" onclick="switchTab('live',this)">🔴 Живые</div>
-  <div class="tab" onclick="switchTab('history',this)">📋 История</div>
-  <div class="tab" onclick="switchTab('stats',this)">📊 Статистика</div>
-  <div class="tab" onclick="switchTab('channel',this)">📢 Канал</div>
+  <div class="tab active" onclick="switchTab('live',this)">🔴 Live</div>
+  <div class="tab" onclick="switchTab('history',this)">📋 History</div>
+  <div class="tab" onclick="switchTab('stats',this)">📊 Stats</div>
+  <div class="tab" onclick="switchTab('channel',this)">📢 Channel</div>
 </div>
 
 <!-- LIVE -->
 <div class="panel active" id="live">
   <div class="live-wrap">
-    <div class="live-tag"><div class="live-dot"></div> Активный сигнал</div>
+    <div class="live-tag"><div class="live-dot"></div> Active signal</div>
     <div class="signal long" style="margin-bottom:0;border:none;padding:0;background:none">
       <div class="signal-header">
         <span class="signal-pair">BTC/USDT</span>
         <span class="signal-type type-long">LONG</span>
       </div>
       <div class="signal-grid">
-        <div class="sig-item"><div class="sig-label">Вход</div><div class="sig-val">67 420</div></div>
-        <div class="sig-item"><div class="sig-label">Тейк</div><div class="sig-val green">69 500</div></div>
-        <div class="sig-item"><div class="sig-label">Стоп</div><div class="sig-val red">66 100</div></div>
+        <div class="sig-item"><div class="sig-label">Entry</div><div class="sig-val">67 420</div></div>
+        <div class="sig-item"><div class="sig-label">Take</div><div class="sig-val green">69 500</div></div>
+        <div class="sig-item"><div class="sig-label">Stop</div><div class="sig-val red">66 100</div></div>
       </div>
       <div class="signal-footer">
         <span class="signal-badge">⚡ TradingView</span>
@@ -135,7 +135,7 @@ html,body{background:var(--bg);font-family:'Manrope',sans-serif;color:var(--text
     <div class="mini-chart" id="miniChart"></div>
   </div>
 
-  <div class="section-title">Последние сигналы</div>
+  <div class="section-title">Recent signals</div>
 
   <div class="signal long">
     <div class="signal-header">
@@ -143,9 +143,9 @@ html,body{background:var(--bg);font-family:'Manrope',sans-serif;color:var(--text
       <span class="signal-type type-long">LONG</span>
     </div>
     <div class="signal-grid">
-      <div class="sig-item"><div class="sig-label">Вход</div><div class="sig-val">3 512</div></div>
-      <div class="sig-item"><div class="sig-label">Тейк</div><div class="sig-val green">3 680</div></div>
-      <div class="sig-item"><div class="sig-label">Стоп</div><div class="sig-val red">3 420</div></div>
+      <div class="sig-item"><div class="sig-label">Entry</div><div class="sig-val">3 512</div></div>
+      <div class="sig-item"><div class="sig-label">Take</div><div class="sig-val green">3 680</div></div>
+      <div class="sig-item"><div class="sig-label">Stop</div><div class="sig-val red">3 420</div></div>
     </div>
     <div class="signal-footer">
       <span class="signal-badge">⚡ TradingView</span>
@@ -159,9 +159,9 @@ html,body{background:var(--bg);font-family:'Manrope',sans-serif;color:var(--text
       <span class="signal-type type-short">SHORT</span>
     </div>
     <div class="signal-grid">
-      <div class="sig-item"><div class="sig-label">Вход</div><div class="sig-val">178.4</div></div>
-      <div class="sig-item"><div class="sig-label">Тейк</div><div class="sig-val green">168.0</div></div>
-      <div class="sig-item"><div class="sig-label">Стоп</div><div class="sig-val red">183.0</div></div>
+      <div class="sig-item"><div class="sig-label">Entry</div><div class="sig-val">178.4</div></div>
+      <div class="sig-item"><div class="sig-label">Take</div><div class="sig-val green">168.0</div></div>
+      <div class="sig-item"><div class="sig-label">Stop</div><div class="sig-val red">183.0</div></div>
     </div>
     <div class="signal-footer">
       <span class="signal-badge">⚡ TradingView</span>
@@ -173,33 +173,33 @@ html,body{background:var(--bg);font-family:'Manrope',sans-serif;color:var(--text
 <!-- HISTORY -->
 <div class="panel" id="history">
   <div class="stats-row" style="margin-top:4px">
-    <div class="stat-box"><div class="stat-big" style="color:#81c784">78%</div><div class="stat-lbl">Винрейт</div></div>
-    <div class="stat-box"><div class="stat-big" style="color:#64b5f6">47</div><div class="stat-lbl">Сигналов</div></div>
-    <div class="stat-box"><div class="stat-big" style="color:#81c784">+124%</div><div class="stat-lbl">За месяц</div></div>
+    <div class="stat-box"><div class="stat-big" style="color:#81c784">78%</div><div class="stat-lbl">Win rate</div></div>
+    <div class="stat-box"><div class="stat-big" style="color:#64b5f6">47</div><div class="stat-lbl">Signals</div></div>
+    <div class="stat-box"><div class="stat-big" style="color:#81c784">+124%</div><div class="stat-lbl">This month</div></div>
   </div>
   <div class="chart-wrap">
-    <div style="font-family:'Syne',sans-serif;font-size:13px;font-weight:700;margin-bottom:12px">История сделок</div>
-    <div class="history-row"><span class="h-pair">BTC/USDT</span><span class="h-type"><span class="result-badge win">LONG</span></span><span style="font-size:12px;color:var(--sub)">2 дня назад</span><span class="h-profit pos">+3.1%</span></div>
-    <div class="history-row"><span class="h-pair">ETH/USDT</span><span class="h-type"><span class="result-badge win">LONG</span></span><span style="font-size:12px;color:var(--sub)">2 дня назад</span><span class="h-profit pos">+4.8%</span></div>
-    <div class="history-row"><span class="h-pair">SOL/USDT</span><span class="h-type"><span class="result-badge win">SHORT</span></span><span style="font-size:12px;color:var(--sub)">3 дня назад</span><span class="h-profit pos">+5.8%</span></div>
-    <div class="history-row"><span class="h-pair">BNB/USDT</span><span class="h-type"><span class="result-badge loss">SHORT</span></span><span style="font-size:12px;color:var(--sub)">3 дня назад</span><span class="h-profit neg">-1.2%</span></div>
-    <div class="history-row"><span class="h-pair">XRP/USDT</span><span class="h-type"><span class="result-badge win">LONG</span></span><span style="font-size:12px;color:var(--sub)">4 дня назад</span><span class="h-profit pos">+6.2%</span></div>
-    <div class="history-row"><span class="h-pair">AVAX/USDT</span><span class="h-type"><span class="result-badge win">LONG</span></span><span style="font-size:12px;color:var(--sub)">5 дней назад</span><span class="h-profit pos">+4.1%</span></div>
-    <div class="history-row"><span class="h-pair">BTC/USDT</span><span class="h-type"><span class="result-badge loss">SHORT</span></span><span style="font-size:12px;color:var(--sub)">5 дней назад</span><span class="h-profit neg">-0.8%</span></div>
-    <div class="history-row"><span class="h-pair">DOGE/USDT</span><span class="h-type"><span class="result-badge win">LONG</span></span><span style="font-size:12px;color:var(--sub)">6 дней назад</span><span class="h-profit pos">+8.4%</span></div>
+    <div style="font-family:'Syne',sans-serif;font-size:13px;font-weight:700;margin-bottom:12px">Trade history</div>
+    <div class="history-row"><span class="h-pair">BTC/USDT</span><span class="h-type"><span class="result-badge win">LONG</span></span><span style="font-size:12px;color:var(--sub)">2 days ago</span><span class="h-profit pos">+3.1%</span></div>
+    <div class="history-row"><span class="h-pair">ETH/USDT</span><span class="h-type"><span class="result-badge win">LONG</span></span><span style="font-size:12px;color:var(--sub)">2 days ago</span><span class="h-profit pos">+4.8%</span></div>
+    <div class="history-row"><span class="h-pair">SOL/USDT</span><span class="h-type"><span class="result-badge win">SHORT</span></span><span style="font-size:12px;color:var(--sub)">3 days ago</span><span class="h-profit pos">+5.8%</span></div>
+    <div class="history-row"><span class="h-pair">BNB/USDT</span><span class="h-type"><span class="result-badge loss">SHORT</span></span><span style="font-size:12px;color:var(--sub)">3 days ago</span><span class="h-profit neg">-1.2%</span></div>
+    <div class="history-row"><span class="h-pair">XRP/USDT</span><span class="h-type"><span class="result-badge win">LONG</span></span><span style="font-size:12px;color:var(--sub)">4 days ago</span><span class="h-profit pos">+6.2%</span></div>
+    <div class="history-row"><span class="h-pair">AVAX/USDT</span><span class="h-type"><span class="result-badge win">LONG</span></span><span style="font-size:12px;color:var(--sub)">5 days ago</span><span class="h-profit pos">+4.1%</span></div>
+    <div class="history-row"><span class="h-pair">BTC/USDT</span><span class="h-type"><span class="result-badge loss">SHORT</span></span><span style="font-size:12px;color:var(--sub)">5 days ago</span><span class="h-profit neg">-0.8%</span></div>
+    <div class="history-row"><span class="h-pair">DOGE/USDT</span><span class="h-type"><span class="result-badge win">LONG</span></span><span style="font-size:12px;color:var(--sub)">6 days ago</span><span class="h-profit pos">+8.4%</span></div>
   </div>
 </div>
 
 <!-- STATS -->
 <div class="panel" id="stats">
   <div class="stats-row" style="margin-top:4px">
-    <div class="stat-box"><div class="stat-big" style="color:#81c784">78%</div><div class="stat-lbl">Винрейт</div></div>
-    <div class="stat-box"><div class="stat-big" style="color:#64b5f6">47</div><div class="stat-lbl">Сигналов</div></div>
+    <div class="stat-box"><div class="stat-big" style="color:#81c784">78%</div><div class="stat-lbl">Win rate</div></div>
+    <div class="stat-box"><div class="stat-big" style="color:#64b5f6">47</div><div class="stat-lbl">Signals</div></div>
     <div class="stat-box"><div class="stat-big" style="color:#ffb74d">3.8x</div><div class="stat-lbl">RR ratio</div></div>
   </div>
   <div class="chart-wrap">
-    <div style="font-family:'Syne',sans-serif;font-size:13px;font-weight:700;margin-bottom:4px">Прибыль по месяцам</div>
-    <div style="font-size:12px;color:var(--sub);margin-bottom:12px">Суммарный результат: <span style="color:#81c784;font-weight:600">+312%</span></div>
+    <div style="font-family:'Syne',sans-serif;font-size:13px;font-weight:700;margin-bottom:4px">Monthly profit</div>
+    <div style="font-size:12px;color:var(--sub);margin-bottom:12px">Total result: <span style="color:#81c784;font-weight:600">+312%</span></div>
     <div class="mini-chart" style="height:100px">
       <div class="bar-c bar-up" style="height:40%"></div>
       <div class="bar-c bar-up" style="height:55%"></div>
@@ -213,24 +213,24 @@ html,body{background:var(--bg);font-family:'Manrope',sans-serif;color:var(--text
       <div class="bar-c bar-up" style="height:100%"></div>
     </div>
     <div style="display:flex;justify-content:space-between;margin-top:6px">
-      <span style="font-size:10px;color:var(--sub)">Мар</span>
-      <span style="font-size:10px;color:var(--sub)">Апр</span>
-      <span style="font-size:10px;color:var(--sub)">Май</span>
-      <span style="font-size:10px;color:var(--sub)">Июн</span>
-      <span style="font-size:10px;color:var(--sub)">Июл</span>
-      <span style="font-size:10px;color:var(--sub)">Авг</span>
-      <span style="font-size:10px;color:var(--sub)">Сен</span>
-      <span style="font-size:10px;color:var(--sub)">Окт</span>
-      <span style="font-size:10px;color:var(--sub)">Ноя</span>
-      <span style="font-size:10px;color:var(--sub)">Дек</span>
+      <span style="font-size:10px;color:var(--sub)">Mar</span>
+      <span style="font-size:10px;color:var(--sub)">Apr</span>
+      <span style="font-size:10px;color:var(--sub)">May</span>
+      <span style="font-size:10px;color:var(--sub)">Jun</span>
+      <span style="font-size:10px;color:var(--sub)">Jul</span>
+      <span style="font-size:10px;color:var(--sub)">Aug</span>
+      <span style="font-size:10px;color:var(--sub)">Sep</span>
+      <span style="font-size:10px;color:var(--sub)">Oct</span>
+      <span style="font-size:10px;color:var(--sub)">Nov</span>
+      <span style="font-size:10px;color:var(--sub)">Dec</span>
     </div>
   </div>
   <div class="chart-wrap">
-    <div style="font-family:'Syne',sans-serif;font-size:13px;font-weight:700;margin-bottom:12px">По монетам</div>
-    <div class="history-row"><span class="h-pair">BTC/USDT</span><span style="font-size:12px;color:var(--sub)">18 сигналов</span><span class="h-profit pos">+82%</span></div>
-    <div class="history-row"><span class="h-pair">ETH/USDT</span><span style="font-size:12px;color:var(--sub)">12 сигналов</span><span class="h-profit pos">+64%</span></div>
-    <div class="history-row"><span class="h-pair">SOL/USDT</span><span style="font-size:12px;color:var(--sub)">8 сигналов</span><span class="h-profit pos">+91%</span></div>
-    <div class="history-row"><span class="h-pair">Другие</span><span style="font-size:12px;color:var(--sub)">9 сигналов</span><span class="h-profit pos">+75%</span></div>
+    <div style="font-family:'Syne',sans-serif;font-size:13px;font-weight:700;margin-bottom:12px">By coin</div>
+    <div class="history-row"><span class="h-pair">BTC/USDT</span><span style="font-size:12px;color:var(--sub)">18 signals</span><span class="h-profit pos">+82%</span></div>
+    <div class="history-row"><span class="h-pair">ETH/USDT</span><span style="font-size:12px;color:var(--sub)">12 signals</span><span class="h-profit pos">+64%</span></div>
+    <div class="history-row"><span class="h-pair">SOL/USDT</span><span style="font-size:12px;color:var(--sub)">8 signals</span><span class="h-profit pos">+91%</span></div>
+    <div class="history-row"><span class="h-pair">Other</span><span style="font-size:12px;color:var(--sub)">9 signals</span><span class="h-profit pos">+75%</span></div>
   </div>
 </div>
 
@@ -239,16 +239,16 @@ html,body{background:var(--bg);font-family:'Manrope',sans-serif;color:var(--text
   <div style="text-align:center;padding:20px 0 16px">
     <div style="font-size:48px;margin-bottom:8px">📢</div>
     <div style="font-family:'Syne',sans-serif;font-size:18px;font-weight:800;margin-bottom:8px">Crypto AI Signals</div>
-    <div style="font-size:13px;color:var(--sub);margin-bottom:20px">Реальный канал с сигналами от TradingView.<br>Бот работает 24/7 — компьютер выключен.</div>
+    <div style="font-size:13px;color:var(--sub);margin-bottom:20px">Real channel with TradingView signals.<br>Bot runs 24/7 — your computer can be off.</div>
   </div>
-  <a class="channel-btn" href="https://t.me/Crypto_AI_Signalss" target="_blank">✈️ Открыть канал в Telegram</a>
+  <a class="channel-btn" href="https://t.me/Crypto_AI_Signalss" target="_blank">✈️ Open channel in Telegram</a>
   <div class="chart-wrap" style="margin-top:4px">
-    <div style="font-family:'Syne',sans-serif;font-size:13px;font-weight:700;margin-bottom:12px">О боте</div>
-    <div class="history-row"><span style="color:var(--sub);font-size:13px">Источник сигналов</span><span style="font-size:13px;font-weight:600">TradingView</span></div>
-    <div class="history-row"><span style="color:var(--sub);font-size:13px">Язык</span><span style="font-size:13px;font-weight:600">Python</span></div>
-    <div class="history-row"><span style="color:var(--sub);font-size:13px">Хостинг</span><span style="font-size:13px;font-weight:600">GitHub Actions</span></div>
-    <div class="history-row"><span style="color:var(--sub);font-size:13px">Режим работы</span><span style="font-size:13px;font-weight:600;color:#81c784">24/7 онлайн</span></div>
-    <div class="history-row"><span style="color:var(--sub);font-size:13px">Фильтрация</span><span style="font-size:13px;font-weight:600">ИИ + правила</span></div>
+    <div style="font-family:'Syne',sans-serif;font-size:13px;font-weight:700;margin-bottom:12px">About the bot</div>
+    <div class="history-row"><span style="color:var(--sub);font-size:13px">Signal source</span><span style="font-size:13px;font-weight:600">TradingView</span></div>
+    <div class="history-row"><span style="color:var(--sub);font-size:13px">Language</span><span style="font-size:13px;font-weight:600">Python</span></div>
+    <div class="history-row"><span style="color:var(--sub);font-size:13px">Hosting</span><span style="font-size:13px;font-weight:600">GitHub Actions</span></div>
+    <div class="history-row"><span style="color:var(--sub);font-size:13px">Uptime</span><span style="font-size:13px;font-weight:600;color:#81c784">24/7 online</span></div>
+    <div class="history-row"><span style="color:var(--sub);font-size:13px">Filtering</span><span style="font-size:13px;font-weight:600">AI + rules</span></div>
   </div>
 </div>
 
