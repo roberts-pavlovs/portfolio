@@ -166,7 +166,7 @@ footer{flex-direction:column;gap:12px;text-align:center;padding:24px 20px}
 <a class="btn-secondary" href="#contact" data-i18n="hero.btn2">Обсудить проект</a>
 </div>
 <div class="hero-stats">
-<div><div class="stat-num">13+</div><div class="stat-label" data-i18n="hero.stat1">Выполненных проектов</div></div>
+<div><div class="stat-num">14+</div><div class="stat-label" data-i18n="hero.stat1">Выполненных проектов</div></div>
 <div><div class="stat-num">3</div><div class="stat-label" data-i18n="hero.stat2">Дня средний срок</div></div>
 <div><div class="stat-num">100%</div><div class="stat-label" data-i18n="hero.stat3">Довольных клиентов</div></div>
 </div>
@@ -248,6 +248,17 @@ footer{flex-direction:column;gap:12px;text-align:center;padding:24px 20px}
 <h2 class="section-title fade-up" data-i18n="pf.title">Портфолио</h2>
 <p class="section-sub fade-up" data-i18n="pf.sub">Реальные проекты — от AI-аналитики до корпоративных систем</p>
 <div class="portfolio-grid">
+
+<div class="portfolio-card flagship fade-up">
+<div class="flagship-badge">NEW</div>
+<div class="portfolio-preview">⚖️</div>
+<div class="portfolio-body">
+<div class="portfolio-title" data-i18n="pf.iura.title">AI-юридический ассистент для Латвии</div>
+<div class="portfolio-desc" data-i18n="pf.iura.desc">Iura.lv — AI-юридический ассистент для рынка Латвии. SaaS-платформа, которая отвечает на юридические вопросы со ссылками на законы Латвии, анализирует договоры и составляет документы. RAG по базе законов, синхронизированной с Likumi.lv. Реализовано в одиночку: от бэкенда и биллинга до аналитики и демо-воронки.</div>
+<div class="portfolio-meta"><div class="portfolio-tech"><span class="tag tag-green">Claude API</span><span class="tag tag-green">Next.js</span><span class="tag tag-green">FastAPI</span><span class="tag tag-green">PostgreSQL</span><span class="tag tag-green">Stripe</span></div><div class="portfolio-badge" data-i18n="pf.live">Работает</div></div>
+<a class="portfolio-demo-btn green" style="text-align:center;margin-top:14px" href="https://iura.lv" target="_blank" data-i18n="pf.btn.site">🌐 Открыть сайт</a>
+</div>
+</div>
 
 <div class="portfolio-card flagship fade-up">
 <div class="flagship-badge">FLAGSHIP</div>
@@ -399,7 +410,8 @@ ru: {
 "svc.corp.title":"Корпоративная система","svc.corp.desc":"Комплексное решение для бизнеса: управление клиентами и заявками, статусы, уведомления сотрудникам, интеграция с CRM и таблицами. Под ключ.","svc.corp.time":"2 недели",
 "pf.tag":"Мои проекты","pf.title":"Портфолио","pf.sub":"Реальные проекты — от AI-аналитики до корпоративных систем",
 "pf.live":"Работает","pf.demo":"Демо",
-"pf.btn.demo":"▶ Смотреть демо","pf.btn.demoShort":"▶ Демо","pf.btn.openbot":"✈️ Открыть бот","pf.btn.group":"👥 Группа","pf.btn.opentg":"✈️ Открыть в Telegram","pf.btn.channel":"✈️ Канал",
+"pf.btn.demo":"▶ Смотреть демо","pf.btn.demoShort":"▶ Демо","pf.btn.openbot":"✈️ Открыть бот","pf.btn.group":"👥 Группа","pf.btn.opentg":"✈️ Открыть в Telegram","pf.btn.channel":"✈️ Канал","pf.btn.site":"🌐 Открыть сайт",
+"pf.iura.title":"AI-юридический ассистент для Латвии","pf.iura.desc":"Iura.lv — AI-юридический ассистент для рынка Латвии. SaaS-платформа, которая отвечает на юридические вопросы со ссылками на законы Латвии, анализирует договоры и составляет документы. RAG по базе законов, синхронизированной с Likumi.lv. Реализовано в одиночку: от бэкенда и биллинга до аналитики и демо-воронки.",
 "pf.tradeai.title":"AI-анализ графиков (4 агента)","pf.tradeai.desc":"Mini App с мульти-агентной системой: три AI-агента (Smart Money, Price Action, EMA) разбирают график пользователя, четвёртый выносит коллективный вердикт с точкой входа, TP и SL. Оплата через Telegram Stars, защищённое хранение баланса, поддержка RU/EN.",
 "pf.factory.title":"Журнал производственной линии","pf.factory.desc":"Бот для учёта работы цеха: фиксация запусков и остановок линии, причины (поломка, смена краски, обед), задержки и опоздания. Автоматический расчёт эффективности смены и простоя в минутах. Отчёты по дням, неделям и месяцам.","pf.factory.badge":"Работает на заводе","pf.factory.demoTitle":"Журнал линии — Демо",
 "pf.game.title":"Mini App — трейдинг-игра","pf.game.desc":"Игровое Mini App в Telegram. Симуляция трейдинга с механиками вовлечения — игроки прокачивают навыки трейдинга в безопасной среде.",
@@ -434,7 +446,8 @@ lv: {
 "svc.corp.title":"Korporatīvā sistēma","svc.corp.desc":"Kompleksais risinājums biznesam: klientu un pieteikumu pārvaldība, statusi, paziņojumi darbiniekiem, integrācija ar CRM un tabulām. Pilna pakalpojuma.","svc.corp.time":"2 nedēļas",
 "pf.tag":"Mani projekti","pf.title":"Portfolio","pf.sub":"Reāli projekti — no AI analītikas līdz korporatīvām sistēmām",
 "pf.live":"Darbojas","pf.demo":"Demo",
-"pf.btn.demo":"▶ Skatīt demo","pf.btn.demoShort":"▶ Demo","pf.btn.openbot":"✈️ Atvērt botu","pf.btn.group":"👥 Grupa","pf.btn.opentg":"✈️ Atvērt Telegram","pf.btn.channel":"✈️ Kanāls",
+"pf.btn.demo":"▶ Skatīt demo","pf.btn.demoShort":"▶ Demo","pf.btn.openbot":"✈️ Atvērt botu","pf.btn.group":"👥 Grupa","pf.btn.opentg":"✈️ Atvērt Telegram","pf.btn.channel":"✈️ Kanāls","pf.btn.site":"🌐 Atvērt vietni",
+"pf.iura.title":"AI juridiskais asistents Latvijai","pf.iura.desc":"Iura.lv — AI juridiskais asistents Latvijas tirgum. SaaS platforma, kas atbild uz juridiskiem jautājumiem ar atsaucēm uz Latvijas likumiem, analizē līgumus un sagatavo dokumentus. RAG pa likumu bāzi, kas sinhronizēta ar Likumi.lv. Izstrādāts patstāvīgi — no backend un norēķiniem līdz analītikai un demo piltuvei.",
 "pf.tradeai.title":"AI grafiku analīze (4 aģenti)","pf.tradeai.desc":"Mini App ar multi-aģentu sistēmu: trīs AI aģenti (Smart Money, Price Action, EMA) analizē lietotāja grafiku, ceturtais sniedz kopējo verdiktu ar ieejas punktu, TP un SL. Apmaksa caur Telegram Stars, droša bilances glabāšana, atbalsts RU/EN.",
 "pf.factory.title":"Ražošanas līnijas žurnāls","pf.factory.desc":"Bots ceha darbības uzskaitei: līnijas palaišanas un apstāšanās fiksēšana, iemesli (avārija, krāsas maiņa, pusdienas), kavējumi. Automātisks maiņas efektivitātes un dīkstāves aprēķins minūtēs. Atskaites pa dienām, nedēļām un mēnešiem.","pf.factory.badge":"Darbojas rūpnīcā","pf.factory.demoTitle":"Līnijas žurnāls — Demo",
 "pf.game.title":"Mini App — tirdzniecības spēle","pf.game.desc":"Spēļu Mini App Telegram. Tirdzniecības simulācija ar iesaistes mehānikām — spēlētāji pilnveido tirdzniecības prasmes drošā vidē.",
@@ -469,7 +482,8 @@ en: {
 "svc.corp.title":"Corporate system","svc.corp.desc":"Complex business solution: client and request management, statuses, employee notifications, integration with CRM and spreadsheets. Turnkey.","svc.corp.time":"2 weeks",
 "pf.tag":"My projects","pf.title":"Portfolio","pf.sub":"Real projects — from AI analytics to corporate systems",
 "pf.live":"Live","pf.demo":"Demo",
-"pf.btn.demo":"▶ View demo","pf.btn.demoShort":"▶ Demo","pf.btn.openbot":"✈️ Open bot","pf.btn.group":"👥 Group","pf.btn.opentg":"✈️ Open in Telegram","pf.btn.channel":"✈️ Channel",
+"pf.btn.demo":"▶ View demo","pf.btn.demoShort":"▶ Demo","pf.btn.openbot":"✈️ Open bot","pf.btn.group":"👥 Group","pf.btn.opentg":"✈️ Open in Telegram","pf.btn.channel":"✈️ Channel","pf.btn.site":"🌐 Open website",
+"pf.iura.title":"AI Legal Assistant for Latvia","pf.iura.desc":"Iura.lv — an AI legal assistant for the Latvian market. A SaaS platform that answers legal questions with citations to Latvian law, analyzes contracts, and drafts documents. RAG over a law database synced with Likumi.lv. Built solo, end to end — from backend and billing to analytics and the demo funnel.",
 "pf.tradeai.title":"AI chart analysis (4 agents)","pf.tradeai.desc":"Mini App with a multi-agent system: three AI agents (Smart Money, Price Action, EMA) analyze the user's chart, the fourth delivers a collective verdict with entry, TP and SL. Telegram Stars payment, secure balance storage, RU/EN support.",
 "pf.factory.title":"Production line journal","pf.factory.desc":"Bot for workshop tracking: logs line starts and stops, reasons (breakdown, paint change, lunch), delays. Automatic shift efficiency and downtime calculation in minutes. Reports by day, week and month.","pf.factory.badge":"Running at a factory","pf.factory.demoTitle":"Line journal — Demo",
 "pf.game.title":"Mini App — trading game","pf.game.desc":"Gaming Mini App in Telegram. Trading simulation with engagement mechanics — players sharpen their trading skills in a safe environment.",
