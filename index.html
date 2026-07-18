@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Robert Pavlov — Telegram Bots, Mini Apps & AI Integration</title>
+<title>Robert Pavlov — AI & Full-Stack Developer</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;500;700;800&family=Manrope:wght@400;500;600&display=swap" rel="stylesheet">
 <style>
@@ -38,7 +38,8 @@ nav{position:fixed;top:0;left:0;right:0;z-index:100;padding:16px 40px;display:fl
 @keyframes pulse{0%,100%{opacity:1}50%{opacity:0.4}}
 .hero h1{font-family:'Syne',sans-serif;font-size:clamp(42px,6vw,80px);font-weight:800;line-height:1.05;letter-spacing:-2px;margin-bottom:24px}
 .hero h1 .line2{color:var(--accent2)}
-.hero p{font-size:18px;color:var(--sub);max-width:600px;margin-bottom:40px;line-height:1.7}
+.hero p{font-size:18px;color:var(--sub);max-width:600px;margin-bottom:24px;line-height:1.7}
+.hero-approach{display:flex;align-items:center;gap:8px;font-size:14px;color:var(--accent3);max-width:600px;margin-bottom:36px}
 .hero-btns{display:flex;gap:14px;flex-wrap:wrap}
 .btn-primary{background:var(--accent);color:white;padding:14px 32px;border-radius:10px;text-decoration:none;font-size:15px;font-weight:600;transition:all 0.2s;display:inline-flex;align-items:center;gap:8px}
 .btn-primary:hover{background:#2563eb;transform:translateY(-1px)}
@@ -68,13 +69,6 @@ section{padding:100px 40px}
 .service-tags{display:flex;flex-wrap:wrap;gap:6px}
 .tag{background:rgba(59,130,246,0.08);border:1px solid rgba(59,130,246,0.15);color:var(--accent3);padding:3px 10px;border-radius:20px;font-size:12px;font-weight:500}
 .tag.tag-green{background:rgba(52,211,153,0.1);border-color:rgba(52,211,153,0.25);color:var(--green)}
-.service-price{margin-top:18px;padding-top:18px;border-top:1px solid var(--border);display:flex;justify-content:space-between;align-items:center}
-.service-deadline{font-size:12px;color:var(--sub);display:flex;align-items:center;gap:4px}
-.service-deadline::before{content:'⏱';font-size:11px}
-.price-from{display:flex;flex-direction:column;align-items:flex-end}
-.price-label{font-size:11px;color:var(--sub)}
-.price-val{font-family:'Syne',sans-serif;font-size:20px;font-weight:700;color:var(--accent2);line-height:1}
-.service-card.ai-featured .price-val{color:var(--green)}
 .portfolio-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(320px,1fr));gap:20px;margin-top:56px}
 .portfolio-card{background:var(--card);border:1px solid var(--border);border-radius:16px;overflow:hidden;transition:all 0.25s;position:relative}
 .portfolio-card:hover{border-color:rgba(59,130,246,0.3);transform:translateY(-3px)}
@@ -170,12 +164,13 @@ footer{flex-direction:column;gap:12px;text-align:center;padding:24px 20px}
 <section class="hero">
 <div class="hero-grid"></div>
 <div class="hero-content">
-<div class="hero-badge" data-i18n="hero.badge">Доступен для заказов</div>
-<h1 data-i18n-html="hero.title">Telegram боты,<br><span class="line2">Mini Apps</span> и AI<br>под ключ</h1>
-<p data-i18n="hero.desc">Разрабатываю Telegram-боты, Mini Apps и подключаю AI под задачи любого бизнеса — от трейдинга до магазинов и сервисов.</p>
+<div class="hero-badge" data-i18n="hero.badge">Ищу удалённую работу</div>
+<h1 data-i18n-html="hero.title">Разработчик:<br><span class="line2">AI-интеграции</span>, Telegram-боты,<br>веб-приложения</h1>
+<p data-i18n="hero.desc">Разрабатываю Telegram-боты, Mini Apps и AI-интеграции полным циклом — от архитектуры до продакшена.</p>
+<p class="hero-approach" data-i18n="hero.approach">⚡ Быстро осваиваю новые технологии — использую AI-инструменты, чтобы учиться и работать эффективнее.</p>
 <div class="hero-btns">
 <a class="btn-primary" href="#portfolio" data-i18n="hero.btn1">Смотреть работы ↓</a>
-<a class="btn-secondary" href="#contact" data-i18n="hero.btn2">Обсудить проект</a>
+<a class="btn-secondary" href="#contact" data-i18n="hero.btn2">Связаться</a>
 </div>
 <div class="hero-stats">
 <div><div class="stat-num">14+</div><div class="stat-label" data-i18n="hero.stat1">Выполненных проектов</div></div>
@@ -187,9 +182,9 @@ footer{flex-direction:column;gap:12px;text-align:center;padding:24px 20px}
 
 <section class="services" id="services">
 <div class="container">
-<div class="section-tag fade-up" data-i18n="services.tag">Что я делаю</div>
-<h2 class="section-title fade-up" data-i18n="services.title">Услуги и цены</h2>
-<p class="section-sub fade-up" data-i18n="services.sub">Полный цикл разработки — от идеи до готового продукта в Telegram</p>
+<div class="section-tag fade-up" data-i18n="services.tag">Компетенции</div>
+<h2 class="section-title fade-up" data-i18n="services.title">Что я умею</h2>
+<p class="section-sub fade-up" data-i18n="services.sub">Технологии и задачи, с которыми работаю на практике</p>
 
 <div class="services-grid">
 
@@ -199,7 +194,6 @@ footer{flex-direction:column;gap:12px;text-align:center;padding:24px 20px}
 <div class="service-title" data-i18n="svc.ai.title">AI-интеграция под бизнес</div>
 <div class="service-desc" data-i18n="svc.ai.desc">Подключаю Claude / GPT под любую задачу: анализ изображений, обработка текстов, чат-боты, авто-ответы клиентам, генерация контента. Не только трейдинг — для любого бизнеса.</div>
 <div class="service-tags"><span class="tag tag-green">Claude</span><span class="tag tag-green">GPT-4</span><span class="tag tag-green">Python</span></div>
-<div class="service-price"><span class="service-deadline" data-i18n="svc.ai.time">2–5 дней</span><div class="price-from"><span class="price-label" data-i18n="svc.from">от</span><span class="price-val">350 €</span></div></div>
 </div>
 
 <div class="service-card fade-up">
@@ -207,7 +201,6 @@ footer{flex-direction:column;gap:12px;text-align:center;padding:24px 20px}
 <div class="service-title" data-i18n="svc.factory.title">Учёт для производства</div>
 <div class="service-desc" data-i18n="svc.factory.desc">Бот ведёт журнал смен, остановок и поломок производственной линии. Считает простой в минутах и эффективность по дням, неделям и месяцам. Настраивается под ваш цех.</div>
 <div class="service-tags"><span class="tag">Python</span><span class="tag">aiogram</span><span class="tag">Stats</span></div>
-<div class="service-price"><span class="service-deadline" data-i18n="svc.factory.time">3–5 дней</span><div class="price-from"><span class="price-label" data-i18n="svc.from">от</span><span class="price-val">250 €</span></div></div>
 </div>
 
 <div class="service-card fade-up">
@@ -215,7 +208,6 @@ footer{flex-direction:column;gap:12px;text-align:center;padding:24px 20px}
 <div class="service-title" data-i18n="svc.aiedit.title">ИИ-редакция для канала</div>
 <div class="service-desc" data-i18n="svc.aiedit.desc">Агент собирает новости с разных источников, GPT обрабатывает и публикует в Telegram-канал. Владелец редактирует посты перед публикацией.</div>
 <div class="service-tags"><span class="tag">GPT-4</span><span class="tag">Python</span><span class="tag">RSS</span></div>
-<div class="service-price"><span class="service-deadline" data-i18n="svc.aiedit.time">1–2 дня</span><div class="price-from"><span class="price-label" data-i18n="svc.from">от</span><span class="price-val">145 €</span></div></div>
 </div>
 
 <div class="service-card fade-up">
@@ -223,7 +215,6 @@ footer{flex-direction:column;gap:12px;text-align:center;padding:24px 20px}
 <div class="service-title" data-i18n="svc.bot.title">Telegram-бот</div>
 <div class="service-desc" data-i18n="svc.bot.desc">Боты любой сложности — от простого FAQ до полноценной системы. Меню, команды, inline-кнопки, уведомления, оплата.</div>
 <div class="service-tags"><span class="tag">Python</span><span class="tag">aiogram</span><span class="tag">PostgreSQL</span></div>
-<div class="service-price"><span class="service-deadline" data-i18n="svc.bot.time">1–2 дня</span><div class="price-from"><span class="price-label" data-i18n="svc.from">от</span><span class="price-val">150 €</span></div></div>
 </div>
 
 <div class="service-card fade-up">
@@ -231,7 +222,6 @@ footer{flex-direction:column;gap:12px;text-align:center;padding:24px 20px}
 <div class="service-title" data-i18n="svc.int.title">Подключение сервисов</div>
 <div class="service-desc" data-i18n="svc.int.desc">Интеграция бота с внешними сервисами: Google Sheets, CRM, TradingView, любые API и webhooks. Автоматические уведомления и отчёты.</div>
 <div class="service-tags"><span class="tag">TradingView</span><span class="tag">Google API</span><span class="tag">Webhook</span></div>
-<div class="service-price"><span class="service-deadline" data-i18n="svc.int.time">1–2 дня</span><div class="price-from"><span class="price-label" data-i18n="svc.from">от</span><span class="price-val">250 €</span></div></div>
 </div>
 
 <div class="service-card fade-up">
@@ -239,7 +229,6 @@ footer{flex-direction:column;gap:12px;text-align:center;padding:24px 20px}
 <div class="service-title" data-i18n="svc.miniapp.title">Telegram Mini App</div>
 <div class="service-desc" data-i18n="svc.miniapp.desc">Полноценное веб-приложение прямо внутри Telegram. Каталоги, личные кабинеты, формы заявок, корзина, оплата — всё в одном месте.</div>
 <div class="service-tags"><span class="tag">React</span><span class="tag">TG WebApp API</span><span class="tag">Node.js</span></div>
-<div class="service-price"><span class="service-deadline" data-i18n="svc.miniapp.time">2–3 дня</span><div class="price-from"><span class="price-label" data-i18n="svc.from">от</span><span class="price-val">400 €</span></div></div>
 </div>
 
 <div class="service-card fade-up">
@@ -247,7 +236,6 @@ footer{flex-direction:column;gap:12px;text-align:center;padding:24px 20px}
 <div class="service-title" data-i18n="svc.corp.title">Корпоративная система</div>
 <div class="service-desc" data-i18n="svc.corp.desc">Комплексное решение для бизнеса: управление клиентами и заявками, статусы, уведомления сотрудникам, интеграция с CRM и таблицами. Под ключ.</div>
 <div class="service-tags"><span class="tag">Python</span><span class="tag">CRM API</span><span class="tag">PostgreSQL</span></div>
-<div class="service-price"><span class="service-deadline" data-i18n="svc.corp.time">2 недели</span><div class="price-from"><span class="price-label" data-i18n="svc.from">от</span><span class="price-val">500 €</span></div></div>
 </div>
 
 </div>
@@ -266,7 +254,7 @@ footer{flex-direction:column;gap:12px;text-align:center;padding:24px 20px}
 <div class="portfolio-preview">⚖️</div>
 <div class="portfolio-body">
 <div class="portfolio-title" data-i18n="pf.iura.title">AI-юридический ассистент для Латвии</div>
-<div class="portfolio-desc" data-i18n="pf.iura.desc">Iura.lv — AI-юридический ассистент для рынка Латвии. SaaS-платформа, которая отвечает на юридические вопросы со ссылками на законы Латвии, анализирует договоры и составляет документы. RAG по базе законов, синхронизированной с Likumi.lv. Реализовано в одиночку: от бэкенда и биллинга до аналитики и демо-воронки.</div>
+<div class="portfolio-desc" data-i18n="pf.iura.desc">Iura.lv — AI-юридический ассистент для рынка Латвии. SaaS-платформа, которая отвечает на юридические вопросы со ссылками на законы Латвии, анализирует договоры и составляет документы. RAG по базе законов, синхронизированной с Likumi.lv. Работающий продукт с первыми платящими клиентами — реальные продажи через Stripe. Полный цикл: архитектура, бэкенд, биллинг, аналитика, деплой.</div>
 <div class="portfolio-meta"><div class="portfolio-tech"><span class="tag tag-gold">Claude API</span><span class="tag tag-gold">Next.js</span><span class="tag tag-gold">FastAPI</span><span class="tag tag-gold">PostgreSQL</span><span class="tag tag-gold">Stripe</span></div><div class="portfolio-badge" data-i18n="pf.live">Работает</div></div>
 <a class="portfolio-demo-btn gold" style="text-align:center;margin-top:14px;max-width:280px" href="https://iura.lv" target="_blank" data-i18n="pf.btn.site">🌐 Открыть сайт</a>
 </div>
@@ -359,10 +347,10 @@ footer{flex-direction:column;gap:12px;text-align:center;padding:24px 20px}
 <h2 class="section-title fade-up" data-i18n="proc.title">Процесс</h2>
 <p class="section-sub fade-up" data-i18n="proc.sub">Прозрачно и быстро — от обсуждения до сдачи</p>
 <div class="process-steps">
-<div class="step fade-up"><div class="step-num">1</div><div class="step-title" data-i18n="proc.s1.t">Обсуждение</div><div class="step-desc" data-i18n="proc.s1.d">Разбираем задачу, уточняем требования и сроки. Бесплатная консультация в Telegram.</div></div>
-<div class="step fade-up"><div class="step-num">2</div><div class="step-title" data-i18n="proc.s2.t">Предоплата 50%</div><div class="step-desc" data-i18n="proc.s2.d">Фиксируем условия и начинаем работу. Оплата безопасно через Telegram или перевод.</div></div>
-<div class="step fade-up"><div class="step-num">3</div><div class="step-title" data-i18n="proc.s3.t">Разработка</div><div class="step-desc" data-i18n="proc.s3.d">Держу в курсе прогресса. Показываю промежуточные результаты для согласования.</div></div>
-<div class="step fade-up"><div class="step-num">4</div><div class="step-title" data-i18n="proc.s4.t">Сдача + поддержка</div><div class="step-desc" data-i18n="proc.s4.d">Оплата остатка 50% после приёмки. Бесплатная поддержка 7 дней после сдачи.</div></div>
+<div class="step fade-up"><div class="step-num">1</div><div class="step-title" data-i18n="proc.s1.t">Знакомство с задачей</div><div class="step-desc" data-i18n="proc.s1.d">Разбираю требования, технический стек и цели проекта.</div></div>
+<div class="step fade-up"><div class="step-num">2</div><div class="step-title" data-i18n="proc.s2.t">Архитектура и планирование</div><div class="step-desc" data-i18n="proc.s2.d">Проектирую решение, выбираю подходящие технологии и подход.</div></div>
+<div class="step fade-up"><div class="step-num">3</div><div class="step-title" data-i18n="proc.s3.t">Разработка</div><div class="step-desc" data-i18n="proc.s3.d">Пишу код, тестирую, показываю промежуточные результаты для обратной связи.</div></div>
+<div class="step fade-up"><div class="step-num">4</div><div class="step-title" data-i18n="proc.s4.t">Деплой и поддержка</div><div class="step-desc" data-i18n="proc.s4.d">Довожу до продакшена, документирую и готов сопровождать дальше.</div></div>
 </div>
 </div>
 </section>
@@ -371,17 +359,17 @@ footer{flex-direction:column;gap:12px;text-align:center;padding:24px 20px}
 <div class="container">
 <div class="contact-inner">
 <div class="section-tag" data-i18n="ct.tag">Связаться</div>
-<div class="contact-title" data-i18n="ct.title">Обсудим ваш проект?</div>
-<div class="contact-sub" data-i18n-html="ct.sub">Напишите в Telegram — отвечаю быстро.<br>Бесплатно обсудим задачу и оценим сроки.</div>
+<div class="contact-title" data-i18n="ct.title">Открыт к предложениям</div>
+<div class="contact-sub" data-i18n-html="ct.sub">Ищу удалённую позицию разработчика.<br>Пишите в Telegram или на почту — отвечаю быстро.</div>
 <div class="contact-links">
 <a class="contact-link" href="https://t.me/robert_pavlov" target="_blank">
 <span class="contact-link-icon">✈️</span>
 <span data-i18n="ct.tg">@robert_pavlov — написать в Telegram</span>
 </a>
-<div class="contact-link" style="cursor:default;opacity:0.7">
-<span class="contact-link-icon">💳</span>
-<span data-i18n="ct.pay">Оплата: USDT / Revolut / Wise</span>
-</div>
+<a class="contact-link" href="mailto:pavlovsroberts@inbox.lv">
+<span class="contact-link-icon">📧</span>
+<span data-i18n="ct.email">pavlovsroberts@inbox.lv — написать на почту</span>
+</a>
 </div>
 </div>
 </div>
@@ -389,7 +377,7 @@ footer{flex-direction:column;gap:12px;text-align:center;padding:24px 20px}
 
 <footer>
 <div class="footer-logo">Robert.Dev</div>
-<div class="footer-copy" data-i18n="footer">© 2026 Robert Pavlov — Telegram боты, Mini Apps и AI · Латвия</div>
+<div class="footer-copy" data-i18n="footer">© 2026 Robert Pavlov — AI & Full-Stack Developer · Латвия</div>
 </footer>
 
 <div class="demo-overlay" id="demoOverlay" onclick="closeDemo(event)">
@@ -406,24 +394,24 @@ footer{flex-direction:column;gap:12px;text-align:center;padding:24px 20px}
 const I18N = {
 ru: {
 "nav.services":"Услуги","nav.portfolio":"Работы","nav.process":"Процесс","nav.contact":"Контакты","nav.cta":"Написать →",
-"hero.badge":"Доступен для заказов",
-"hero.title":'Telegram боты,<br><span class="line2">Mini Apps</span> и AI<br>под ключ',
-"hero.desc":"Разрабатываю Telegram-боты, Mini Apps и подключаю AI под задачи любого бизнеса — от трейдинга до магазинов и сервисов.",
-"hero.btn1":"Смотреть работы ↓","hero.btn2":"Обсудить проект",
+"hero.badge":"Ищу удалённую работу",
+"hero.title":'Разработчик:<br><span class="line2">AI-интеграции</span>, Telegram-боты,<br>веб-приложения',
+"hero.desc":"Разрабатываю Telegram-боты, Mini Apps и AI-интеграции полным циклом — от архитектуры до продакшена.",
+"hero.approach":"⚡ Быстро осваиваю новые технологии — использую AI-инструменты, чтобы учиться и работать эффективнее.",
+"hero.btn1":"Смотреть работы ↓","hero.btn2":"Связаться",
 "hero.stat1":"Выполненных проектов","hero.stat2":"Дня средний срок","hero.stat3":"Довольных клиентов",
-"services.tag":"Что я делаю","services.title":"Услуги и цены","services.sub":"Полный цикл разработки — от идеи до готового продукта в Telegram",
-"svc.from":"от",
-"svc.ai.title":"AI-интеграция под бизнес","svc.ai.desc":"Подключаю Claude / GPT под любую задачу: анализ изображений, обработка текстов, чат-боты, авто-ответы клиентам, генерация контента. Не только трейдинг — для любого бизнеса.","svc.ai.time":"2–5 дней",
-"svc.factory.title":"Учёт для производства","svc.factory.desc":"Бот ведёт журнал смен, остановок и поломок производственной линии. Считает простой в минутах и эффективность по дням, неделям и месяцам. Настраивается под ваш цех.","svc.factory.time":"3–5 дней",
-"svc.aiedit.title":"ИИ-редакция для канала","svc.aiedit.desc":"Агент собирает новости с разных источников, GPT обрабатывает и публикует в Telegram-канал. Владелец редактирует посты перед публикацией.","svc.aiedit.time":"1–2 дня",
-"svc.bot.title":"Telegram-бот","svc.bot.desc":"Боты любой сложности — от простого FAQ до полноценной системы. Меню, команды, inline-кнопки, уведомления, оплата.","svc.bot.time":"1–2 дня",
-"svc.int.title":"Подключение сервисов","svc.int.desc":"Интеграция бота с внешними сервисами: Google Sheets, CRM, TradingView, любые API и webhooks. Автоматические уведомления и отчёты.","svc.int.time":"1–2 дня",
-"svc.miniapp.title":"Telegram Mini App","svc.miniapp.desc":"Полноценное веб-приложение прямо внутри Telegram. Каталоги, личные кабинеты, формы заявок, корзина, оплата — всё в одном месте.","svc.miniapp.time":"2–3 дня",
-"svc.corp.title":"Корпоративная система","svc.corp.desc":"Комплексное решение для бизнеса: управление клиентами и заявками, статусы, уведомления сотрудникам, интеграция с CRM и таблицами. Под ключ.","svc.corp.time":"2 недели",
+"services.tag":"Компетенции","services.title":"Что я умею","services.sub":"Технологии и задачи, с которыми работаю на практике",
+"svc.ai.title":"AI-интеграция под бизнес","svc.ai.desc":"Подключаю Claude / GPT под любую задачу: анализ изображений, обработка текстов, чат-боты, авто-ответы клиентам, генерация контента. Не только трейдинг — для любого бизнеса.",
+"svc.factory.title":"Учёт для производства","svc.factory.desc":"Бот ведёт журнал смен, остановок и поломок производственной линии. Считает простой в минутах и эффективность по дням, неделям и месяцам. Настраивается под ваш цех.",
+"svc.aiedit.title":"ИИ-редакция для канала","svc.aiedit.desc":"Агент собирает новости с разных источников, GPT обрабатывает и публикует в Telegram-канал. Владелец редактирует посты перед публикацией.",
+"svc.bot.title":"Telegram-бот","svc.bot.desc":"Боты любой сложности — от простого FAQ до полноценной системы. Меню, команды, inline-кнопки, уведомления, оплата.",
+"svc.int.title":"Подключение сервисов","svc.int.desc":"Интеграция бота с внешними сервисами: Google Sheets, CRM, TradingView, любые API и webhooks. Автоматические уведомления и отчёты.",
+"svc.miniapp.title":"Telegram Mini App","svc.miniapp.desc":"Полноценное веб-приложение прямо внутри Telegram. Каталоги, личные кабинеты, формы заявок, корзина, оплата — всё в одном месте.",
+"svc.corp.title":"Корпоративная система","svc.corp.desc":"Комплексное решение для бизнеса: управление клиентами и заявками, статусы, уведомления сотрудникам, интеграция с CRM и таблицами. Под ключ.",
 "pf.tag":"Мои проекты","pf.title":"Портфолио","pf.sub":"Реальные проекты — от AI-аналитики до корпоративных систем",
 "pf.live":"Работает","pf.demo":"Демо",
 "pf.btn.demo":"▶ Смотреть демо","pf.btn.demoShort":"▶ Демо","pf.btn.openbot":"✈️ Открыть бот","pf.btn.group":"👥 Группа","pf.btn.opentg":"✈️ Открыть в Telegram","pf.btn.channel":"✈️ Канал","pf.btn.site":"🌐 Открыть сайт",
-"pf.iura.title":"AI-юридический ассистент для Латвии","pf.iura.desc":"Iura.lv — AI-юридический ассистент для рынка Латвии. SaaS-платформа, которая отвечает на юридические вопросы со ссылками на законы Латвии, анализирует договоры и составляет документы. RAG по базе законов, синхронизированной с Likumi.lv. Реализовано в одиночку: от бэкенда и биллинга до аналитики и демо-воронки.",
+"pf.iura.title":"AI-юридический ассистент для Латвии","pf.iura.desc":"Iura.lv — AI-юридический ассистент для рынка Латвии. SaaS-платформа, которая отвечает на юридические вопросы со ссылками на законы Латвии, анализирует договоры и составляет документы. RAG по базе законов, синхронизированной с Likumi.lv. Работающий продукт с первыми платящими клиентами — реальные продажи через Stripe. Полный цикл: архитектура, бэкенд, биллинг, аналитика, деплой.",
 "pf.tradeai.title":"AI-анализ графиков (4 агента)","pf.tradeai.desc":"Mini App с мульти-агентной системой: три AI-агента (Smart Money, Price Action, EMA) разбирают график пользователя, четвёртый выносит коллективный вердикт с точкой входа, TP и SL. Оплата через Telegram Stars, защищённое хранение баланса, поддержка RU/EN.",
 "pf.factory.title":"Журнал производственной линии","pf.factory.desc":"Бот для учёта работы цеха: фиксация запусков и остановок линии, причины (поломка, смена краски, обед), задержки и опоздания. Автоматический расчёт эффективности смены и простоя в минутах. Отчёты по дням, неделям и месяцам.","pf.factory.badge":"Работает на заводе","pf.factory.demoTitle":"Журнал линии — Демо",
 "pf.game.title":"Mini App — трейдинг-игра","pf.game.desc":"Игровое Mini App в Telegram. Симуляция трейдинга с механиками вовлечения — игроки прокачивают навыки трейдинга в безопасной среде.",
@@ -432,34 +420,34 @@ ru: {
 "pf.shop.title":"Mini App — Магазин товаров","pf.shop.desc":"Полноценный интернет-магазин внутри Telegram: каталог, корзина, оформление заказа. Адаптируется под любой бизнес.","pf.shop.demoTitle":"Mini App Магазин — Демо",
 "pf.aichannel.title":"ИИ-редакция для Telegram канала","pf.aichannel.desc":"Агент собирает новости с разных источников, GPT обрабатывает и публикует в канал. Владелец может редактировать посты перед публикацией.","pf.aichannel.demoTitle":"ИИ-редакция — Демо",
 "proc.tag":"Как работаю","proc.title":"Процесс","proc.sub":"Прозрачно и быстро — от обсуждения до сдачи",
-"proc.s1.t":"Обсуждение","proc.s1.d":"Разбираем задачу, уточняем требования и сроки. Бесплатная консультация в Telegram.",
-"proc.s2.t":"Предоплата 50%","proc.s2.d":"Фиксируем условия и начинаем работу. Оплата безопасно через Telegram или перевод.",
-"proc.s3.t":"Разработка","proc.s3.d":"Держу в курсе прогресса. Показываю промежуточные результаты для согласования.",
-"proc.s4.t":"Сдача + поддержка","proc.s4.d":"Оплата остатка 50% после приёмки. Бесплатная поддержка 7 дней после сдачи.",
-"ct.tag":"Связаться","ct.title":"Обсудим ваш проект?","ct.sub":"Напишите в Telegram — отвечаю быстро.<br>Бесплатно обсудим задачу и оценим сроки.",
-"ct.tg":"@robert_pavlov — написать в Telegram","ct.pay":"Оплата: USDT / Revolut / Wise",
-"footer":"© 2026 Robert Pavlov — Telegram боты, Mini Apps и AI · Латвия"
+"proc.s1.t":"Знакомство с задачей","proc.s1.d":"Разбираю требования, технический стек и цели проекта.",
+"proc.s2.t":"Архитектура и планирование","proc.s2.d":"Проектирую решение, выбираю подходящие технологии и подход.",
+"proc.s3.t":"Разработка","proc.s3.d":"Пишу код, тестирую, показываю промежуточные результаты для обратной связи.",
+"proc.s4.t":"Деплой и поддержка","proc.s4.d":"Довожу до продакшена, документирую и готов сопровождать дальше.",
+"ct.tag":"Связаться","ct.title":"Открыт к предложениям","ct.sub":"Ищу удалённую позицию разработчика.<br>Пишите в Telegram или на почту — отвечаю быстро.",
+"ct.tg":"@robert_pavlov — написать в Telegram","ct.email":"pavlovsroberts@inbox.lv — написать на почту",
+"footer":"© 2026 Robert Pavlov — AI & Full-Stack Developer · Латвия"
 },
 lv: {
 "nav.services":"Pakalpojumi","nav.portfolio":"Darbi","nav.process":"Process","nav.contact":"Kontakti","nav.cta":"Sazināties →",
-"hero.badge":"Pieņemu pasūtījumus",
-"hero.title":'Telegram boti,<br><span class="line2">Mini Apps</span> un AI<br>jūsu biznesam',
-"hero.desc":"Izstrādāju Telegram botus, Mini Apps un integrēju AI jebkura biznesa uzdevumiem — no tirdzniecības līdz veikaliem un servisiem.",
-"hero.btn1":"Skatīt darbus ↓","hero.btn2":"Apspriest projektu",
+"hero.badge":"Meklēju attālinātu darbu",
+"hero.title":'Izstrādātājs:<br><span class="line2">AI integrācijas</span>, Telegram boti,<br>web aplikācijas',
+"hero.desc":"Izstrādāju Telegram botus, Mini Apps un AI integrācijas pilnā ciklā — no arhitektūras līdz produkcijai.",
+"hero.approach":"⚡ Ātri apgūstu jaunas tehnoloģijas — izmantoju AI rīkus, lai mācītos un strādātu efektīvāk.",
+"hero.btn1":"Skatīt darbus ↓","hero.btn2":"Sazināties",
 "hero.stat1":"Pabeigti projekti","hero.stat2":"Vidēji dienas","hero.stat3":"Apmierināti klienti",
-"services.tag":"Ko es daru","services.title":"Pakalpojumi un cenas","services.sub":"Pilns izstrādes cikls — no idejas līdz gatavam produktam Telegram",
-"svc.from":"no",
-"svc.ai.title":"AI integrācija biznesam","svc.ai.desc":"Pieslēdzu Claude / GPT jebkuram uzdevumam: attēlu analīze, tekstu apstrāde, čatboti, automātiskās atbildes klientiem, satura ģenerēšana. Ne tikai tirdzniecībai — jebkuram biznesam.","svc.ai.time":"2–5 dienas",
-"svc.factory.title":"Ražošanas uzskaite","svc.factory.desc":"Bots reģistrē maiņas, dīkstāves un avārijas ražošanas līnijā. Aprēķina dīkstāves minūtes un efektivitāti pa dienām, nedēļām un mēnešiem. Pielāgojams jūsu cehā.","svc.factory.time":"3–5 dienas",
-"svc.aiedit.title":"AI redakcija kanālam","svc.aiedit.desc":"Aģents apkopo ziņas no dažādiem avotiem, GPT tos apstrādā un publicē Telegram kanālā. Īpašnieks rediģē ierakstus pirms publicēšanas.","svc.aiedit.time":"1–2 dienas",
-"svc.bot.title":"Telegram bots","svc.bot.desc":"Jebkuras sarežģītības boti — no vienkārša FAQ līdz pilnvērtīgai sistēmai. Izvēlnes, komandas, inline pogas, paziņojumi, apmaksa.","svc.bot.time":"1–2 dienas",
-"svc.int.title":"Servisu integrācija","svc.int.desc":"Bota integrācija ar ārējiem servisiem: Google Sheets, CRM, TradingView, jebkuri API un webhooks. Automātiski paziņojumi un atskaites.","svc.int.time":"1–2 dienas",
-"svc.miniapp.title":"Telegram Mini App","svc.miniapp.desc":"Pilnvērtīga web aplikācija tieši Telegram iekšienē. Katalogi, personiskie kabineti, pieteikumu formas, grozs, apmaksa — viss vienā vietā.","svc.miniapp.time":"2–3 dienas",
-"svc.corp.title":"Korporatīvā sistēma","svc.corp.desc":"Kompleksais risinājums biznesam: klientu un pieteikumu pārvaldība, statusi, paziņojumi darbiniekiem, integrācija ar CRM un tabulām. Pilna pakalpojuma.","svc.corp.time":"2 nedēļas",
+"services.tag":"Kompetences","services.title":"Ko es protu","services.sub":"Tehnoloģijas un uzdevumi, ar kuriem strādāju praksē",
+"svc.ai.title":"AI integrācija biznesam","svc.ai.desc":"Pieslēdzu Claude / GPT jebkuram uzdevumam: attēlu analīze, tekstu apstrāde, čatboti, automātiskās atbildes klientiem, satura ģenerēšana. Ne tikai tirdzniecībai — jebkuram biznesam.",
+"svc.factory.title":"Ražošanas uzskaite","svc.factory.desc":"Bots reģistrē maiņas, dīkstāves un avārijas ražošanas līnijā. Aprēķina dīkstāves minūtes un efektivitāti pa dienām, nedēļām un mēnešiem. Pielāgojams jūsu cehā.",
+"svc.aiedit.title":"AI redakcija kanālam","svc.aiedit.desc":"Aģents apkopo ziņas no dažādiem avotiem, GPT tos apstrādā un publicē Telegram kanālā. Īpašnieks rediģē ierakstus pirms publicēšanas.",
+"svc.bot.title":"Telegram bots","svc.bot.desc":"Jebkuras sarežģītības boti — no vienkārša FAQ līdz pilnvērtīgai sistēmai. Izvēlnes, komandas, inline pogas, paziņojumi, apmaksa.",
+"svc.int.title":"Servisu integrācija","svc.int.desc":"Bota integrācija ar ārējiem servisiem: Google Sheets, CRM, TradingView, jebkuri API un webhooks. Automātiski paziņojumi un atskaites.",
+"svc.miniapp.title":"Telegram Mini App","svc.miniapp.desc":"Pilnvērtīga web aplikācija tieši Telegram iekšienē. Katalogi, personiskie kabineti, pieteikumu formas, grozs, apmaksa — viss vienā vietā.",
+"svc.corp.title":"Korporatīvā sistēma","svc.corp.desc":"Kompleksais risinājums biznesam: klientu un pieteikumu pārvaldība, statusi, paziņojumi darbiniekiem, integrācija ar CRM un tabulām. Pilna pakalpojuma.",
 "pf.tag":"Mani projekti","pf.title":"Portfolio","pf.sub":"Reāli projekti — no AI analītikas līdz korporatīvām sistēmām",
 "pf.live":"Darbojas","pf.demo":"Demo",
 "pf.btn.demo":"▶ Skatīt demo","pf.btn.demoShort":"▶ Demo","pf.btn.openbot":"✈️ Atvērt botu","pf.btn.group":"👥 Grupa","pf.btn.opentg":"✈️ Atvērt Telegram","pf.btn.channel":"✈️ Kanāls","pf.btn.site":"🌐 Atvērt vietni",
-"pf.iura.title":"AI juridiskais asistents Latvijai","pf.iura.desc":"Iura.lv — AI juridiskais asistents Latvijas tirgum. SaaS platforma, kas atbild uz juridiskiem jautājumiem ar atsaucēm uz Latvijas likumiem, analizē līgumus un sagatavo dokumentus. RAG pa likumu bāzi, kas sinhronizēta ar Likumi.lv. Izstrādāts patstāvīgi — no backend un norēķiniem līdz analītikai un demo piltuvei.",
+"pf.iura.title":"AI juridiskais asistents Latvijai","pf.iura.desc":"Iura.lv — AI juridiskais asistents Latvijas tirgum. SaaS platforma, kas atbild uz juridiskiem jautājumiem ar atsaucēm uz Latvijas likumiem, analizē līgumus un sagatavo dokumentus. RAG pa likumu bāzi, kas sinhronizēta ar Likumi.lv. Strādājošs produkts ar pirmajiem maksājošajiem klientiem — reāla pārdošana caur Stripe. Pilns cikls: arhitektūra, backend, norēķini, analītika, izvietošana.",
 "pf.tradeai.title":"AI grafiku analīze (4 aģenti)","pf.tradeai.desc":"Mini App ar multi-aģentu sistēmu: trīs AI aģenti (Smart Money, Price Action, EMA) analizē lietotāja grafiku, ceturtais sniedz kopējo verdiktu ar ieejas punktu, TP un SL. Apmaksa caur Telegram Stars, droša bilances glabāšana, atbalsts RU/EN.",
 "pf.factory.title":"Ražošanas līnijas žurnāls","pf.factory.desc":"Bots ceha darbības uzskaitei: līnijas palaišanas un apstāšanās fiksēšana, iemesli (avārija, krāsas maiņa, pusdienas), kavējumi. Automātisks maiņas efektivitātes un dīkstāves aprēķins minūtēs. Atskaites pa dienām, nedēļām un mēnešiem.","pf.factory.badge":"Darbojas rūpnīcā","pf.factory.demoTitle":"Līnijas žurnāls — Demo",
 "pf.game.title":"Mini App — tirdzniecības spēle","pf.game.desc":"Spēļu Mini App Telegram. Tirdzniecības simulācija ar iesaistes mehānikām — spēlētāji pilnveido tirdzniecības prasmes drošā vidē.",
@@ -468,34 +456,34 @@ lv: {
 "pf.shop.title":"Mini App — preču veikals","pf.shop.desc":"Pilnvērtīgs interneta veikals Telegram iekšienē: katalogs, grozs, pasūtījuma noformēšana. Pielāgojams jebkuram biznesam.","pf.shop.demoTitle":"Mini App veikals — Demo",
 "pf.aichannel.title":"AI redakcija Telegram kanālam","pf.aichannel.desc":"Aģents apkopo ziņas no dažādiem avotiem, GPT tos apstrādā un publicē kanālā. Īpašnieks var rediģēt ierakstus pirms publicēšanas.","pf.aichannel.demoTitle":"AI redakcija — Demo",
 "proc.tag":"Kā strādāju","proc.title":"Process","proc.sub":"Caurspīdīgi un ātri — no apspriešanas līdz nodošanai",
-"proc.s1.t":"Apspriešana","proc.s1.d":"Analizējam uzdevumu, precizējam prasības un termiņus. Bezmaksas konsultācija Telegram.",
-"proc.s2.t":"Priekšapmaksa 50%","proc.s2.d":"Fiksējam nosacījumus un sākam darbu. Apmaksa droši caur Telegram vai pārskaitījumu.",
-"proc.s3.t":"Izstrāde","proc.s3.d":"Informēju par progresu. Rādu starprezultātus saskaņošanai.",
-"proc.s4.t":"Nodošana + atbalsts","proc.s4.d":"Atlikušie 50% pēc pieņemšanas. Bezmaksas atbalsts 7 dienas pēc nodošanas.",
-"ct.tag":"Sazināties","ct.title":"Apspriedīsim jūsu projektu?","ct.sub":"Rakstiet Telegram — atbildu ātri.<br>Bezmaksas apspriedīsim uzdevumu un novērtēsim termiņus.",
-"ct.tg":"@robert_pavlov — rakstīt Telegram","ct.pay":"Apmaksa: USDT / Revolut / Wise",
-"footer":"© 2026 Robert Pavlov — Telegram boti, Mini Apps un AI · Latvija"
+"proc.s1.t":"Iepazīšanās ar uzdevumu","proc.s1.d":"Analizēju prasības, tehnoloģiju steku un projekta mērķus.",
+"proc.s2.t":"Arhitektūra un plānošana","proc.s2.d":"Izstrādāju risinājuma dizainu, izvēlos piemērotas tehnoloģijas un pieeju.",
+"proc.s3.t":"Izstrāde","proc.s3.d":"Rakstu kodu, testēju, rādu starprezultātus atgriezeniskajai saitei.",
+"proc.s4.t":"Izvietošana un atbalsts","proc.s4.d":"Novedu līdz produkcijai, dokumentēju un esmu gatavs turpināt uzturēšanu.",
+"ct.tag":"Sazināties","ct.title":"Atvērts piedāvājumiem","ct.sub":"Meklēju attālinātu izstrādātāja pozīciju.<br>Rakstiet Telegram vai uz e-pastu — atbildu ātri.",
+"ct.tg":"@robert_pavlov — rakstīt Telegram","ct.email":"pavlovsroberts@inbox.lv — rakstīt uz e-pastu",
+"footer":"© 2026 Robert Pavlov — AI & Full-Stack izstrādātājs · Latvija"
 },
 en: {
 "nav.services":"Services","nav.portfolio":"Work","nav.process":"Process","nav.contact":"Contact","nav.cta":"Get in touch →",
-"hero.badge":"Available for projects",
-"hero.title":'Telegram bots,<br><span class="line2">Mini Apps</span> and AI<br>for your business',
-"hero.desc":"I build Telegram bots, Mini Apps and integrate AI for any business task — from trading to shops and services.",
-"hero.btn1":"View work ↓","hero.btn2":"Discuss project",
+"hero.badge":"Open to remote work",
+"hero.title":'Developer:<br><span class="line2">AI integrations</span>, Telegram bots,<br>web apps',
+"hero.desc":"I build Telegram bots, Mini Apps and AI integrations end to end — from architecture to production.",
+"hero.approach":"⚡ I pick up new technologies fast — using AI tools to learn and ship more efficiently.",
+"hero.btn1":"View work ↓","hero.btn2":"Get in touch",
 "hero.stat1":"Completed projects","hero.stat2":"Days average","hero.stat3":"Happy clients",
-"services.tag":"What I do","services.title":"Services & pricing","services.sub":"Full development cycle — from idea to ready Telegram product",
-"svc.from":"from",
-"svc.ai.title":"AI integration for business","svc.ai.desc":"I plug Claude / GPT into any task: image analysis, text processing, chatbots, auto-replies to clients, content generation. Not just trading — for any business.","svc.ai.time":"2–5 days",
-"svc.factory.title":"Production line tracker","svc.factory.desc":"Bot logs shifts, downtimes and breakdowns on a production line. Calculates downtime minutes and efficiency by day, week, month. Tailored to your workshop.","svc.factory.time":"3–5 days",
-"svc.aiedit.title":"AI editor for channel","svc.aiedit.desc":"Agent collects news from various sources, GPT processes and publishes to a Telegram channel. Owner edits posts before publishing.","svc.aiedit.time":"1–2 days",
-"svc.bot.title":"Telegram bot","svc.bot.desc":"Bots of any complexity — from simple FAQ to a full system. Menus, commands, inline buttons, notifications, payments.","svc.bot.time":"1–2 days",
-"svc.int.title":"Service integrations","svc.int.desc":"Bot integration with external services: Google Sheets, CRM, TradingView, any API and webhooks. Automatic notifications and reports.","svc.int.time":"1–2 days",
-"svc.miniapp.title":"Telegram Mini App","svc.miniapp.desc":"Full web app right inside Telegram. Catalogs, personal accounts, request forms, cart, payments — all in one place.","svc.miniapp.time":"2–3 days",
-"svc.corp.title":"Corporate system","svc.corp.desc":"Complex business solution: client and request management, statuses, employee notifications, integration with CRM and spreadsheets. Turnkey.","svc.corp.time":"2 weeks",
+"services.tag":"Skills","services.title":"What I can do","services.sub":"Technologies and tasks I work with in practice",
+"svc.ai.title":"AI integration for business","svc.ai.desc":"I plug Claude / GPT into any task: image analysis, text processing, chatbots, auto-replies to clients, content generation. Not just trading — for any business.",
+"svc.factory.title":"Production line tracker","svc.factory.desc":"Bot logs shifts, downtimes and breakdowns on a production line. Calculates downtime minutes and efficiency by day, week, month. Tailored to your workshop.",
+"svc.aiedit.title":"AI editor for channel","svc.aiedit.desc":"Agent collects news from various sources, GPT processes and publishes to a Telegram channel. Owner edits posts before publishing.",
+"svc.bot.title":"Telegram bot","svc.bot.desc":"Bots of any complexity — from simple FAQ to a full system. Menus, commands, inline buttons, notifications, payments.",
+"svc.int.title":"Service integrations","svc.int.desc":"Bot integration with external services: Google Sheets, CRM, TradingView, any API and webhooks. Automatic notifications and reports.",
+"svc.miniapp.title":"Telegram Mini App","svc.miniapp.desc":"Full web app right inside Telegram. Catalogs, personal accounts, request forms, cart, payments — all in one place.",
+"svc.corp.title":"Corporate system","svc.corp.desc":"Complex business solution: client and request management, statuses, employee notifications, integration with CRM and spreadsheets. Turnkey.",
 "pf.tag":"My projects","pf.title":"Portfolio","pf.sub":"Real projects — from AI analytics to corporate systems",
 "pf.live":"Live","pf.demo":"Demo",
 "pf.btn.demo":"▶ View demo","pf.btn.demoShort":"▶ Demo","pf.btn.openbot":"✈️ Open bot","pf.btn.group":"👥 Group","pf.btn.opentg":"✈️ Open in Telegram","pf.btn.channel":"✈️ Channel","pf.btn.site":"🌐 Open website",
-"pf.iura.title":"AI Legal Assistant for Latvia","pf.iura.desc":"Iura.lv — an AI legal assistant for the Latvian market. A SaaS platform that answers legal questions with citations to Latvian law, analyzes contracts, and drafts documents. RAG over a law database synced with Likumi.lv. Built solo, end to end — from backend and billing to analytics and the demo funnel.",
+"pf.iura.title":"AI Legal Assistant for Latvia","pf.iura.desc":"Iura.lv — an AI legal assistant for the Latvian market. A SaaS platform that answers legal questions with citations to Latvian law, analyzes contracts, and drafts documents. RAG over a law database synced with Likumi.lv. A live product with its first paying customers — real sales through Stripe. Full cycle: architecture, backend, billing, analytics, deployment.",
 "pf.tradeai.title":"AI chart analysis (4 agents)","pf.tradeai.desc":"Mini App with a multi-agent system: three AI agents (Smart Money, Price Action, EMA) analyze the user's chart, the fourth delivers a collective verdict with entry, TP and SL. Telegram Stars payment, secure balance storage, RU/EN support.",
 "pf.factory.title":"Production line journal","pf.factory.desc":"Bot for workshop tracking: logs line starts and stops, reasons (breakdown, paint change, lunch), delays. Automatic shift efficiency and downtime calculation in minutes. Reports by day, week and month.","pf.factory.badge":"Running at a factory","pf.factory.demoTitle":"Line journal — Demo",
 "pf.game.title":"Mini App — trading game","pf.game.desc":"Gaming Mini App in Telegram. Trading simulation with engagement mechanics — players sharpen their trading skills in a safe environment.",
@@ -504,13 +492,13 @@ en: {
 "pf.shop.title":"Mini App — product shop","pf.shop.desc":"Full online shop inside Telegram: catalog, cart, checkout. Adaptable to any business.","pf.shop.demoTitle":"Mini App shop — Demo",
 "pf.aichannel.title":"AI editor for Telegram channel","pf.aichannel.desc":"Agent collects news from various sources, GPT processes and publishes to the channel. Owner can edit posts before publishing.","pf.aichannel.demoTitle":"AI editor — Demo",
 "proc.tag":"How I work","proc.title":"Process","proc.sub":"Transparent and fast — from discussion to delivery",
-"proc.s1.t":"Discussion","proc.s1.d":"We break down the task, clarify requirements and timing. Free consultation on Telegram.",
-"proc.s2.t":"50% prepayment","proc.s2.d":"We lock in terms and start. Safe payment via Telegram or bank transfer.",
-"proc.s3.t":"Development","proc.s3.d":"I keep you posted on progress. Show intermediate results for approval.",
-"proc.s4.t":"Delivery + support","proc.s4.d":"Remaining 50% after acceptance. Free 7-day support after delivery.",
-"ct.tag":"Get in touch","ct.title":"Let's discuss your project","ct.sub":"Message me on Telegram — I reply fast.<br>Free task discussion and time estimate.",
-"ct.tg":"@robert_pavlov — message on Telegram","ct.pay":"Payment: USDT / Revolut / Wise",
-"footer":"© 2026 Robert Pavlov — Telegram bots, Mini Apps and AI · Latvia"
+"proc.s1.t":"Understanding the task","proc.s1.d":"I break down requirements, tech stack and project goals.",
+"proc.s2.t":"Architecture & planning","proc.s2.d":"I design the solution and pick the right technologies and approach.",
+"proc.s3.t":"Development","proc.s3.d":"I write code, test, and share progress for feedback.",
+"proc.s4.t":"Deployment & support","proc.s4.d":"I ship to production, document, and stay available for ongoing support.",
+"ct.tag":"Get in touch","ct.title":"Let's connect","ct.sub":"Looking for a remote developer role.<br>Reach out on Telegram or email — I reply fast.",
+"ct.tg":"@robert_pavlov — message on Telegram","ct.email":"pavlovsroberts@inbox.lv — send an email",
+"footer":"© 2026 Robert Pavlov — AI & Full-Stack Developer · Latvia"
 }
 };
 
