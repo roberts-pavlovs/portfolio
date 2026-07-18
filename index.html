@@ -83,6 +83,18 @@ section{padding:100px 40px}
 .portfolio-card.flagship .portfolio-preview{background:linear-gradient(135deg,#082a1f,#0a1e16)}
 .portfolio-card.flagship .portfolio-preview::after{background:radial-gradient(circle at 50% 100%,rgba(52,211,153,0.18),transparent 60%)}
 .flagship-badge{position:absolute;top:14px;right:14px;background:var(--green2);color:#04130c;font-size:10px;font-weight:800;letter-spacing:1.5px;padding:4px 10px;border-radius:20px;z-index:2}
+.portfolio-card.top{grid-column:1/-1;display:flex;flex-wrap:wrap;border-color:rgba(251,191,36,0.55);box-shadow:0 0 0 1px rgba(251,191,36,0.18),0 25px 60px -20px rgba(251,191,36,0.3)}
+.portfolio-card.top:hover{border-color:#fbbf24;transform:translateY(-5px)}
+.portfolio-card.top .portfolio-preview{width:240px;height:auto;flex-shrink:0;background:linear-gradient(135deg,#2a1f08,#1e1608)}
+.portfolio-card.top .portfolio-preview::after{background:radial-gradient(circle at 50% 100%,rgba(251,191,36,0.28),transparent 60%)}
+.portfolio-card.top .portfolio-body{flex:1;min-width:260px;padding:30px}
+.portfolio-card.top .portfolio-title{font-size:22px}
+.portfolio-card.top .portfolio-desc{font-size:15px}
+.portfolio-card.top .flagship-badge{background:#fbbf24;color:#1a1400}
+.tag.tag-gold{background:rgba(251,191,36,0.12);border-color:rgba(251,191,36,0.35);color:#fbbf24}
+.portfolio-demo-btn.gold{background:rgba(251,191,36,0.12);border-color:rgba(251,191,36,0.35);color:#fbbf24}
+.portfolio-demo-btn.gold:hover{background:rgba(251,191,36,0.22)}
+@media (max-width:640px){.portfolio-card.top .portfolio-preview{width:100%;height:140px}}
 .portfolio-preview{background:linear-gradient(135deg,#0d1b2e,#0a1628);height:180px;display:flex;align-items:center;justify-content:center;font-size:56px;position:relative;overflow:hidden}
 .portfolio-preview::after{content:'';position:absolute;inset:0;background:radial-gradient(circle at 50% 100%,rgba(59,130,246,0.12),transparent 60%)}
 .portfolio-body{padding:22px}
@@ -249,14 +261,14 @@ footer{flex-direction:column;gap:12px;text-align:center;padding:24px 20px}
 <p class="section-sub fade-up" data-i18n="pf.sub">Реальные проекты — от AI-аналитики до корпоративных систем</p>
 <div class="portfolio-grid">
 
-<div class="portfolio-card flagship fade-up">
-<div class="flagship-badge">NEW</div>
+<div class="portfolio-card top fade-up">
+<div class="flagship-badge">★ TOP PROJECT</div>
 <div class="portfolio-preview">⚖️</div>
 <div class="portfolio-body">
 <div class="portfolio-title" data-i18n="pf.iura.title">AI-юридический ассистент для Латвии</div>
 <div class="portfolio-desc" data-i18n="pf.iura.desc">Iura.lv — AI-юридический ассистент для рынка Латвии. SaaS-платформа, которая отвечает на юридические вопросы со ссылками на законы Латвии, анализирует договоры и составляет документы. RAG по базе законов, синхронизированной с Likumi.lv. Реализовано в одиночку: от бэкенда и биллинга до аналитики и демо-воронки.</div>
-<div class="portfolio-meta"><div class="portfolio-tech"><span class="tag tag-green">Claude API</span><span class="tag tag-green">Next.js</span><span class="tag tag-green">FastAPI</span><span class="tag tag-green">PostgreSQL</span><span class="tag tag-green">Stripe</span></div><div class="portfolio-badge" data-i18n="pf.live">Работает</div></div>
-<a class="portfolio-demo-btn green" style="text-align:center;margin-top:14px" href="https://iura.lv" target="_blank" data-i18n="pf.btn.site">🌐 Открыть сайт</a>
+<div class="portfolio-meta"><div class="portfolio-tech"><span class="tag tag-gold">Claude API</span><span class="tag tag-gold">Next.js</span><span class="tag tag-gold">FastAPI</span><span class="tag tag-gold">PostgreSQL</span><span class="tag tag-gold">Stripe</span></div><div class="portfolio-badge" data-i18n="pf.live">Работает</div></div>
+<a class="portfolio-demo-btn gold" style="text-align:center;margin-top:14px;max-width:280px" href="https://iura.lv" target="_blank" data-i18n="pf.btn.site">🌐 Открыть сайт</a>
 </div>
 </div>
 
